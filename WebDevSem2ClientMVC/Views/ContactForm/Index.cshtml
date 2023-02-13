@@ -1,0 +1,45 @@
+﻿@model ContactFormModel
+@{
+    ViewData["Title"] = "Contact formulier";
+}
+@using Microsoft.Extensions.Options
+@inject IOptions<GoogleCaptchaConfig> GoogleCaptchaConfig
+
+<script src="https://www.google.com/recaptcha/api.js?render=@GoogleCaptchaConfig.Value.SiteKey"></script>
+<script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
+
+<script>
+    function getToken(){
+        grecaptcha.ready(function () {
+            grecaptcha.execute('@GoogleCaptchaConfig.Value.SiteKey', { action: 'submit' }).then(function (token) {
+                console.log(token);
+                document.getElementById("Token").value = token;
+            });
+        });
+    }
+    setInterval(getToken, 115000);
+
+    $(function(){
+       getToken()
+    });
+</script>
+
+<form asp-controller="ContactForm" asp-action="Index" method="post">
+    <input type="hidden" asp-for="Token"/>
+    <!-- Input and Submit elements -->
+    <div asp-validation-summary="ModelOnly"></div>
+
+    <label asp-for="Email"></label><br />
+    <input asp-for="Email" /> <br />
+    <span asp-validation-for="Email"></span><br />
+    <label asp-for="Subject"></label><br />
+    <input asp-for="Subject" /> <br />
+    <span asp-validation-for="Subject"></span><br />
+    <label asp-for="Message"></label><br />
+    <input asp-for="Message" /> <br />
+    @*<textarea asp-for="Message"></textarea> <br />*@
+    <span asp-validation-for="Message"></span><br />
+
+
+    <button type="submit">Verzenden</button>
+</form>
