@@ -1,18 +1,29 @@
-﻿namespace WebDevSem2ClientMVC.Models
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
+
+namespace WebDevSem2ClientMVC.Models
 {
     public class DeveloperProfile
     {
-        
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public List<string> Skills { get; set; } = new List<string>();
-        public string Discription { get; set; }
-        public string PictureURL { get; set; }
-        public string Email { get; set; }
+        [Key]
+        [Required]
+        public int DeveloperProfileId { get; set; }
+        [Required]
+        public string? Name { get; set; }
+        [Required]
+        public string? Skills { get; set; }
+        [Required]
+        public string? Discription { get; set; }
+        [Required]
+        [Url]
+        public string? PictureURL { get; set; }
+        [Required]
+        [EmailAddress]
+        public string? Email { get; set; }
 
-        public DeveloperProfile(string name, List<string> skills, string discription, string pictureURL, string email)
+        public DeveloperProfile(string name, string skills, string discription, string pictureURL, string email)
         {
-            Id = 1;
+            DeveloperProfileId = 1;
             Name = name;
             Skills = skills;
             Discription = discription;

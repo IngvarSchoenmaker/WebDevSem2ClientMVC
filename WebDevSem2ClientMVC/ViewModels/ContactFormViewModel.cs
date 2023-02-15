@@ -1,10 +1,11 @@
 ﻿using Microsoft.Build.Framework;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WebDevSem2ClientMVC.ViewModels
 {
     public class ContactFormViewModel
     {
-        [Required]
-        public string Token { get; set; }
+        [NotMapped]
+        public string? Token { get; set; }
     }
 }
