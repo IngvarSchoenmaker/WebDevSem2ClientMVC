@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace WebDevSem2ClientMVC.Models
 {
-    public class DeveloperProfile
+    public class DeveloperProfilec
     {
         [Key]
         [Required]
