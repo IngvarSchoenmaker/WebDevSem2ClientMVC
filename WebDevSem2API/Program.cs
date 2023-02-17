@@ -9,7 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
-builder.Services.AddEntityFrameworkMySQL().AddDbContext<WebDevSem2MySqlContext>(options => {
+builder.Services.AddDbContext<WebDevSem2MySqlContext>(options => {
     options.UseMySQL(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
