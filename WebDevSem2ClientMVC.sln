@@ -5,7 +5,7 @@ VisualStudioVersion = 17.4.33213.308
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebDevSem2ClientMVC", "WebDevSem2ClientMVC\WebDevSem2ClientMVC.csproj", "{17A1D980-6FA5-4700-8672-A18862B9CA49}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebDevSem2API", "WebDevSim2API\WebDevSem2API.csproj", "{633B3694-23CD-4D9C-A094-8C8E1181C71E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebDevSem2API", "WebDevSem2API\WebDevSem2API.csproj", "{633B3694-23CD-4D9C-A094-8C8E1181C71E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

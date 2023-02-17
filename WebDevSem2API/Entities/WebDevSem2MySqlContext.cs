@@ -4,7 +4,7 @@ using System.Reflection.Metadata;
 using Microsoft.EntityFrameworkCore;
 using WebDevSem2ClientMVC.Models;
 
-namespace WebDevSim2API.Entities;
+namespace WebDevSem2API.Entities;
 
 public partial class WebDevSem2MySqlContext : DbContext
 {

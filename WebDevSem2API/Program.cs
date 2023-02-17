@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using MySql.EntityFrameworkCore.Extensions;
 using WebDevSem2ClientMVC.Models;
-using WebDevSim2API.Entities;
+using WebDevSem2API.Entities;
 
 var builder = WebApplication.CreateBuilder(args);
 

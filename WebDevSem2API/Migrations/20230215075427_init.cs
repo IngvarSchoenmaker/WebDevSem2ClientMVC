@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace WebDevSim2API.Migrations
+namespace WebDevSem2API.Migrations
 {
     /// <inheritdoc />
     public partial class init : Migration

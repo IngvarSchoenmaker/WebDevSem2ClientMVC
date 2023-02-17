@@ -6,9 +6,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebDevSem2ClientMVC.Models;
-using WebDevSim2API.Entities;
+using WebDevSem2API.Entities;
 
-namespace WebDevSim2API.Controllers
+namespace WebDevSem2API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
