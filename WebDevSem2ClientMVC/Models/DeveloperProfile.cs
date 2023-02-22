@@ -21,9 +21,9 @@ namespace WebDevSem2ClientMVC.Models
         [EmailAddress]
         public string? Email { get; set; }
 
-        public DeveloperProfile(string name, string skills, string discription, string pictureURL, string email)
+        public DeveloperProfile(int id, string name, string skills, string discription, string pictureURL, string email)
         {
-            DeveloperProfileId = 1;
+            DeveloperProfileId = id;
             Name = name;
             Skills = skills;
             Discription = discription;
