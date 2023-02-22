@@ -6,7 +6,7 @@ namespace WebDevSem2ClientMVC.Controllers
 {
     public class HomeController : Controller
     {
-        private DeveloperProfile Profile { get; set; }
+        private DeveloperProfile? Profile { get; set; }
 
         public IActionResult Index()
         {
