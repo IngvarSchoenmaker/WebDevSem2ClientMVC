@@ -33,5 +33,7 @@ namespace WebDevSem2ClientMVC.Models
         [Display(Name = "Bericht")]
         public string? Message { get; set; }
 
+
+
     }
 }

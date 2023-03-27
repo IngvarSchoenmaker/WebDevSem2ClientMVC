@@ -1,11 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
 using WebDevSem2ClientMVC.Models;
 using SendGrid;
 using SendGrid.Helpers.Mail;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using System.Security.Policy;
+using System.Net.Http.Json;
+using System.Net.Http;
+using NuGet.Protocol;
 
 namespace WebDevSem2ClientMVC.Controllers
 {
@@ -13,11 +12,13 @@ namespace WebDevSem2ClientMVC.Controllers
     {
         private readonly GoogleCaptchaService _captchaService;
         private readonly IConfiguration Configuration;
+        public IHttpClientFactory _httpClientFactory { get; set; }
 
-        public ContactFormController(GoogleCaptchaService captchaService, IConfiguration configuration) 
+        public ContactFormController(GoogleCaptchaService captchaService, IConfiguration configuration, IHttpClientFactory httpClientFactory) 
         { 
             _captchaService = captchaService;
             Configuration = configuration;
+            _httpClientFactory = httpClientFactory;
         }
         public IActionResult Index()
         {
@@ -41,9 +42,23 @@ namespace WebDevSem2ClientMVC.Controllers
             {
                 return View();
             }
+
+            var client = _httpClientFactory.CreateClient("localhost");
+
+            try
+            {
+                await client.PostAsJsonAsync("ContactFormModels", model);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+
+
             //Send mail
             Execute(Configuration["SendGrid"]!).Wait();
-
+            
 
             //var url = new Uri();
             //using var client = new HttpClient();
