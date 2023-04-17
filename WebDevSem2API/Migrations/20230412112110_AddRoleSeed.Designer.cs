@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebDevSem2API.Entities;
 
@@ -11,9 +12,11 @@ using WebDevSem2API.Entities;
 namespace WebDevSem2API.Migrations
 {
     [DbContext(typeof(WebDevSem2MySqlContext))]
-    partial class WebDevSem2MySqlContextModelSnapshot : ModelSnapshot
+    [Migration("20230412112110_AddRoleSeed")]
+    partial class AddRoleSeed
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -254,7 +257,7 @@ namespace WebDevSem2API.Migrations
 
                     b.HasKey("ContactFormId");
 
-                    b.ToTable("ContactFormModel", (string)null);
+                    b.ToTable("ContactFormModel");
                 });
 
             modelBuilder.Entity("WebDevSem2ClientMVC.Models.DeveloperProfile", b =>
@@ -287,7 +290,7 @@ namespace WebDevSem2API.Migrations
 
                     b.HasKey("DeveloperProfileId");
 
-                    b.ToTable("DeveloperProfile", (string)null);
+                    b.ToTable("DeveloperProfile");
 
                     b.HasData(
                         new
