@@ -58,6 +58,9 @@
               "height": 60
             },
             "attrs": {
+              "text": {
+                "text": "Website"
+              },
               "body": {
                 "stroke": "#333333",
                 "strokeWidth": 1,
@@ -70,7 +73,7 @@
             "id": "0141da43-f166-4afd-9246-78a9a74743cf",
             "data": {
               "type": "tm.Actor",
-              "name": "Actor",
+              "name": "Website",
               "description": "",
               "outOfScope": false,
               "reasonOutOfScope": "",
