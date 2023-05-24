@@ -27,6 +27,9 @@
               "height": 60
             },
             "attrs": {
+              "text": {
+                "text": "Rest API"
+              },
               "body": {
                 "stroke": "#333333",
                 "strokeWidth": 1,
@@ -39,7 +42,7 @@
             "id": "023752ce-2d0d-4717-9dde-f6a8f33003c6",
             "data": {
               "type": "tm.Process",
-              "name": "Process",
+              "name": "Rest API",
               "description": "",
               "outOfScope": false,
               "reasonOutOfScope": "",
