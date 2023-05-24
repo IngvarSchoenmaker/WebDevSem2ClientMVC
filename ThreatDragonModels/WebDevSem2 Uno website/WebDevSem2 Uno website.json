@@ -35,8 +35,8 @@
             },
             "visible": true,
             "shape": "process",
-            "id": "023752ce-2d0d-4717-9dde-f6a8f33003c6",
             "zIndex": 1,
+            "id": "023752ce-2d0d-4717-9dde-f6a8f33003c6",
             "data": {
               "type": "tm.Process",
               "name": "Process",
@@ -66,8 +66,8 @@
             },
             "visible": true,
             "shape": "actor",
-            "id": "0141da43-f166-4afd-9246-78a9a74743cf",
             "zIndex": 2,
+            "id": "0141da43-f166-4afd-9246-78a9a74743cf",
             "data": {
               "type": "tm.Actor",
               "name": "Actor",
@@ -134,7 +134,7 @@
             "connector": "smooth",
             "data": {
               "type": "tm.Flow",
-              "name": "Data Flow",
+              "name": "Rest request",
               "description": "",
               "outOfScope": false,
               "reasonOutOfScope": "",
@@ -145,6 +145,9 @@
               "threats": []
             },
             "id": "fa8f2364-d4ef-48b1-8dcf-4a7fcceaf563",
+            "labels": [
+              "Rest request"
+            ],
             "source": {
               "cell": "0141da43-f166-4afd-9246-78a9a74743cf"
             },
@@ -156,9 +159,6 @@
                 "x": 460,
                 "y": 230
               }
-            ],
-            "labels": [
-              "Data Flow"
             ]
           },
           {
@@ -179,7 +179,7 @@
             "connector": "smooth",
             "data": {
               "type": "tm.Flow",
-              "name": "Data Flow",
+              "name": "Rest response",
               "description": "",
               "outOfScope": false,
               "reasonOutOfScope": "",
@@ -190,6 +190,9 @@
               "threats": []
             },
             "id": "e73104b1-b477-4a66-a82d-5680e8d443ab",
+            "labels": [
+              "Rest response"
+            ],
             "source": {
               "cell": "023752ce-2d0d-4717-9dde-f6a8f33003c6"
             },
@@ -201,9 +204,6 @@
                 "x": 590,
                 "y": 230
               }
-            ],
-            "labels": [
-              "Data Flow"
             ]
           },
           {
@@ -235,6 +235,9 @@
               "threats": []
             },
             "id": "d1a911ad-9b72-4654-91bd-73c450e44b3a",
+            "labels": [
+              "Data Flow"
+            ],
             "source": {
               "cell": "023752ce-2d0d-4717-9dde-f6a8f33003c6"
             },
@@ -246,9 +249,6 @@
                 "x": 450,
                 "y": 340
               }
-            ],
-            "labels": [
-              "Data Flow"
             ]
           },
           {
@@ -280,6 +280,9 @@
               "threats": []
             },
             "id": "936828a5-234d-4089-91ad-f10d1833da96",
+            "labels": [
+              "Data Flow"
+            ],
             "source": {
               "cell": "d5418fb4-3387-4873-af68-b895b8e516f5"
             },
@@ -291,9 +294,6 @@
                 "x": 600,
                 "y": 340
               }
-            ],
-            "labels": [
-              "Data Flow"
             ]
           }
         ]
