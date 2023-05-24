@@ -43,7 +43,7 @@
             "data": {
               "type": "tm.Process",
               "name": "Rest API",
-              "description": "",
+              "description": "Verwerkt verzoeken van de website en communiceert met de database.",
               "outOfScope": false,
               "reasonOutOfScope": "",
               "privilegeLevel": "",
@@ -114,7 +114,7 @@
             "data": {
               "type": "tm.Store",
               "name": "Database",
-              "description": "",
+              "description": "Opslag van gegevens.",
               "outOfScope": false,
               "reasonOutOfScope": "",
               "isALog": false,
