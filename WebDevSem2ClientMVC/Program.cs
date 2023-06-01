@@ -5,8 +5,16 @@ using Microsoft.AspNetCore.RateLimiting;
 using System.Threading.RateLimiting;
 using WebDevSem2ClientMVC;
 using WebDevSem2ClientMVC.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using WebDevSem2ClientMVC.Areas.Identity.Data;
 
 var builder = WebApplication.CreateBuilder(args);
+var connectionString = builder.Configuration.GetConnectionString("ApplicationDBContextConnection") ?? throw new InvalidOperationException("Connection string 'ApplicationDBContextConnection' not found.");
+
+builder.Services.AddDbContext<ApplicationDBContext>(options => options.UseSqlServer(connectionString));
+
+builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<ApplicationDBContext>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews(options =>
@@ -87,6 +95,7 @@ app.UseRouting();
 
 app.UseAuthorization();
 
+app.MapRazorPages();
 
 app.MapControllerRoute(
     name: "default",
