@@ -3,10 +3,20 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+@*    <meta http-equiv="Content-Security-Policy"
+          content="base-uri 'self';
+               default-src 'self';
+               img-src data: https:;
+               object-src 'none';
+               script-src 'self'
+                          'unsafe-eval';
+               style-src 'self';
+               upgrade-insecure-requests;">*@
     <title>@ViewData["Title"] - WebDevSem2ClientMVC</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/WebDevSem2ClientMVC.styles.css" asp-append-version="true" />
+
 </head>
 <body>
     <header>
@@ -32,12 +42,15 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="ContactForm" asp-action="Index">Contact the developer</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Uno" asp-action="Index">Uno game</a>
+                        </li>
                     </ul>
                 </div>
             </div>
         </nav>
     </header>
-    <div class="container">
+    <div class="container-fluid">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>

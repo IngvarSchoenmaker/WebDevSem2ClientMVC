@@ -1,5 +1,9 @@
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
+using System.Threading.RateLimiting;
+using WebDevSem2ClientMVC;
 using WebDevSem2ClientMVC.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,8 +23,6 @@ builder.Services.Configure<CookiePolicyOptions>(options =>
     options.MinimumSameSitePolicy = SameSiteMode.None;
 });
 
-builder.Configuration.AddEnvironmentVariables("SendGrid");
-
 builder.Services.Configure<GoogleCaptchaConfig>(builder.Configuration.GetSection("GoogleReCaptcha"));
 builder.Services.AddTransient(typeof(GoogleCaptchaService));
 builder.Services.AddHttpClient();
@@ -29,8 +31,28 @@ builder.Services.AddHttpClient("localhost", c =>
     //c.BaseAddress = new Uri(builder.Configuration.GetValue<string>("LocalApi"));
     c.BaseAddress = new Uri("https://localhost:44384/api/");
 });
+//builder.Services.AddHsts(options =>
+//{
+//    options.Preload = true;
+//    options.IncludeSubDomains = true;
+//    options.MaxAge = TimeSpan.FromDays(60);
+//    //options.ExcludedHosts.Add("example.com");
+//    //options.ExcludedHosts.Add("www.example.com");
+//});
+////https://learn.microsoft.com/en-us/aspnet/core/performance/rate-limit?view=aspnetcore-7.0
+//builder.Services.AddRateLimiter(_ => _
+//    .AddFixedWindowLimiter(policyName: "fixed", options =>
+//    {
+//        options.PermitLimit = 4;
+//        options.Window = TimeSpan.FromSeconds(12);
+//        options.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+//        options.QueueLimit = 2;
+//    }));
+
 
 var app = builder.Build();
+
+//app.UseRateLimiter();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -39,10 +61,19 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+
 app.UseForwardedHeaders(new ForwardedHeadersOptions
 {
     ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
 });
+
+//static string GetTicks() => (DateTime.Now.Ticks & 0x11111).ToString("00000");
+
+//app.MapGet("/", () => Results.Ok($"Hello {GetTicks()}"))
+//                           .RequireRateLimiting("fixed");
+
+
+//app.UseMiddleware<CustomHeaderMiddleware>();
 
 app.UseAuthentication();
 
@@ -55,6 +86,7 @@ app.UseCookiePolicy();
 app.UseRouting();
 
 app.UseAuthorization();
+
 
 app.MapControllerRoute(
     name: "default",

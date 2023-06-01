@@ -28,7 +28,6 @@ namespace WebDevSem2ClientMVC.Controllers
         {
             return View();
         }
-
         [HttpPost]
         public async Task<IActionResult> Index(ContactFormModel model)
         {
@@ -57,7 +56,7 @@ namespace WebDevSem2ClientMVC.Controllers
 
 
             //Send mail
-            Execute(Configuration["SendGrid"]!).Wait();
+            Execute().Wait();
             
 
             //var url = new Uri();
@@ -67,9 +66,9 @@ namespace WebDevSem2ClientMVC.Controllers
             return new RedirectResult(url: "/ContactForm/FormSuccess", permanent: true, preserveMethod: true);
         }
 
-        static async Task Execute(string apiKey)
+        static async Task Execute()
         {
-            //var apiKey = Environment.GetEnvironmentVariable("SendGrid");
+            var apiKey = Environment.GetEnvironmentVariable("SENDGRID_API_KEY");
             var client = new SendGridClient(apiKey);
             var from = new EmailAddress("test@example.com", "Example User");
             var subject = "Sending with SendGrid is Fun";
