@@ -76,13 +76,13 @@ namespace WebDevSem2ClientMVC.Areas.Identity.Pages.Account
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
             [Required]
-            [StringLength(255, ErrorMessage = "De lengte van je voornaam mag max {0} zijn!")]
+            [StringLength(255, ErrorMessage = "DeDe {0} mag maximaal {1} zijn")]
             [Display(Name = "Voornaam")]
             public string FirstName { get; set; }
 
             /// </summary>
             [Required]
-            [StringLength(255, ErrorMessage = "De lengte van je achternaam mag max {0} zijn!")]
+            [StringLength(255, ErrorMessage = "De {0} mag maximaal {1} zijn")]
             [Display(Name = "Achternaam")]
             public string LastName { get; set; }
             /// </summary>
@@ -96,9 +96,9 @@ namespace WebDevSem2ClientMVC.Areas.Identity.Pages.Account
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
             [Required]
-            [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+            [StringLength(100, ErrorMessage = "Het {0} moet minimaal {2} en maximaal {1} caracters lang zijn.", MinimumLength = 6)]
             [DataType(DataType.Password)]
-            [Display(Name = "Password")]
+            [Display(Name = "Wachtwoord")]
             public string Password { get; set; }
 
             /// <summary>
@@ -106,8 +106,8 @@ namespace WebDevSem2ClientMVC.Areas.Identity.Pages.Account
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
             [DataType(DataType.Password)]
-            [Display(Name = "Confirm password")]
-            [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+            [Display(Name = "Herhaal wachtwoord")]
+            [Compare("Password", ErrorMessage = "Het wachtwoord komt niet overeen")]
             public string ConfirmPassword { get; set; }
         }
 
