@@ -74,6 +74,32 @@
                   "new": false,
                   "number": 8,
                   "score": ""
+                },
+                {
+                  "id": "762d60e5-ddc4-4459-9249-c3a9b3461431",
+                  "title": "Sql injection",
+                  "status": "Open",
+                  "severity": "High",
+                  "type": "Information disclosure",
+                  "description": "Kwetsbaarheden in de API kunnen het mogelijk maken voor aanvallers om kwaadaardige SQL-injectieaanvallen uit te voeren en ongeautoriseerde toegang tot de database te verkrijgen.\nAanvallers kunnen kwaadaardige SQL-query's invoeren via invoervelden in de API en zo toegang krijgen tot, wijzigingen aanbrengen in of gegevens verwijderen uit de database.",
+                  "mitigation": "Provide remediation for this threat or a reason if status is N/A",
+                  "modelType": "STRIDE",
+                  "new": false,
+                  "number": 9,
+                  "score": ""
+                },
+                {
+                  "id": "36c61aca-5728-4741-a2e8-e28eff267354",
+                  "title": "Verkeerde configuratie",
+                  "status": "Open",
+                  "severity": "High",
+                  "type": "Repudiation",
+                  "description": "Onjuiste configuratie van de website, API of database kan beveiligingslekken veroorzaken en aanvallers de mogelijkheid bieden om ongeautoriseerde toegang te verkrijgen of schadelijke acties uit te voeren.\nOnjuiste configuratie van toegangscontroles, misconfiguratie van de API-routes of slechte beveiligingsinstellingen kunnen aanvallers toegang geven tot gevoelige informatie.",
+                  "mitigation": "Provide remediation for this threat or a reason if status is N/A",
+                  "modelType": "STRIDE",
+                  "new": false,
+                  "number": 11,
+                  "score": ""
                 }
               ]
             }
@@ -114,7 +140,7 @@
           },
           {
             "position": {
-              "x": 460.25,
+              "x": 456.5,
               "y": 388
             },
             "size": {
@@ -468,6 +494,6 @@
     ],
     "diagramTop": 1,
     "reviewer": "John Brouwers",
-    "threatTop": 8
+    "threatTop": 11
   }
 }
