@@ -99,11 +99,13 @@
                 "text": "Database"
               },
               "topLine": {
-                "strokeWidth": 1,
+                "stroke": "red",
+                "strokeWidth": 3,
                 "strokeDasharray": null
               },
               "bottomLine": {
-                "strokeWidth": 1,
+                "stroke": "red",
+                "strokeWidth": 3,
                 "strokeDasharray": null
               }
             },
@@ -121,8 +123,35 @@
               "storesCredentials": false,
               "isEncrypted": false,
               "isSigned": false,
-              "hasOpenThreats": false,
-              "threats": []
+              "hasOpenThreats": true,
+              "threats": [
+                {
+                  "id": "5fe950d2-7c73-41d0-844f-3baeb251d4c7",
+                  "title": "Ongeautoriseerde toegang",
+                  "status": "Open",
+                  "severity": "High",
+                  "type": "Tampering",
+                  "description": "Aanvallers kunnen proberen ongeautoriseerde toegang te krijgen tot de website, de API of de database om vertrouwelijke informatie te verkrijgen.\nAanvallers kunnen proberen zwakke inloggegevens te raden, gebruik te maken van gestolen inloggegevens of zwakke authenticatiemechanismen te omzeilen.\nOngeautoriseerde toegang: Hoog risico. Kan leiden tot verlies of diefstal van gevoelige gegevens.",
+                  "mitigation": "",
+                  "modelType": "STRIDE",
+                  "new": false,
+                  "number": 1,
+                  "score": ""
+                },
+                {
+                  "id": "22109cc2-dab5-40c8-9fab-b62c4ff2db6d",
+                  "title": "DDoS-aanvallen",
+                  "status": "Open",
+                  "severity": "Medium",
+                  "type": "Denial of service",
+                  "description": "Aanvallers kunnen proberen de beschikbaarheid van de website en de API te verstoren door Distributed Denial of Service (DDoS)-aanvallen uit te voeren.\nAanvallers kunnen de infrastructuur overbelasten met een grote hoeveelheid verkeer of geautomatiseerde botnets gebruiken om de beschikbaarheid van de website en API te verstoren.",
+                  "mitigation": "Gemiddeld risico. Kan leiden tot tijdelijke verstoring van de dienstverlening.",
+                  "modelType": "STRIDE",
+                  "new": false,
+                  "number": 2,
+                  "score": ""
+                }
+              ]
             }
           },
           {
@@ -386,6 +415,6 @@
     ],
     "diagramTop": 1,
     "reviewer": "John Brouwers",
-    "threatTop": 0
+    "threatTop": 2
   }
 }
