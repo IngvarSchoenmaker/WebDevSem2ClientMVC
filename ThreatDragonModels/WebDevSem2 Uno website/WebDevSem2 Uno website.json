@@ -31,8 +31,8 @@
                 "text": "Rest API"
               },
               "body": {
-                "stroke": "#333333",
-                "strokeWidth": 1,
+                "stroke": "red",
+                "strokeWidth": 3,
                 "strokeDasharray": null
               }
             },
@@ -47,8 +47,35 @@
               "outOfScope": false,
               "reasonOutOfScope": "",
               "privilegeLevel": "",
-              "hasOpenThreats": false,
-              "threats": []
+              "hasOpenThreats": true,
+              "threats": [
+                {
+                  "id": "80e83aed-ed1f-4cc4-a9a3-4b43673ea5b0",
+                  "title": "Ongeoutoriseerd toegang",
+                  "status": "Open",
+                  "severity": "High",
+                  "type": "Elevation of privilege",
+                  "description": "Aanvallers kunnen proberen ongeautoriseerde toegang te krijgen tot de website, de API of de database om vertrouwelijke informatie te verkrijgen.\nAanvallers kunnen proberen zwakke inloggegevens te raden, gebruik te maken van gestolen inloggegevens of zwakke authenticatiemechanismen te omzeilen.\nOngeautoriseerde toegang: Hoog risico. Kan leiden tot verlies of diefstal van gevoelige gegevens.",
+                  "mitigation": "Provide remediation for this threat or a reason if status is N/A",
+                  "modelType": "STRIDE",
+                  "new": false,
+                  "number": 6,
+                  "score": ""
+                },
+                {
+                  "id": "7c00998b-b2b8-4903-adde-85c2d3a573be",
+                  "title": "DDos aanval",
+                  "status": "Open",
+                  "severity": "Medium",
+                  "type": "Denial of service",
+                  "description": "Aanvallers kunnen proberen de beschikbaarheid van de website en de API te verstoren door Distributed Denial of Service (DDoS)-aanvallen uit te voeren.\nAanvallers kunnen de infrastructuur overbelasten met een grote hoeveelheid verkeer of geautomatiseerde botnets gebruiken om de beschikbaarheid van de website en API te verstoren.",
+                  "mitigation": "Provide remediation for this threat or a reason if status is N/A",
+                  "modelType": "STRIDE",
+                  "new": false,
+                  "number": 8,
+                  "score": ""
+                }
+              ]
             }
           },
           {
@@ -87,7 +114,7 @@
           },
           {
             "position": {
-              "x": 460,
+              "x": 460.25,
               "y": 388
             },
             "size": {
@@ -441,6 +468,6 @@
     ],
     "diagramTop": 1,
     "reviewer": "John Brouwers",
-    "threatTop": 4
+    "threatTop": 8
   }
 }
