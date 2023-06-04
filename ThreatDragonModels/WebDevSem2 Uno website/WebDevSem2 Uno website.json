@@ -150,6 +150,32 @@
                   "new": false,
                   "number": 2,
                   "score": ""
+                },
+                {
+                  "id": "01dec143-f99d-497c-88c2-32bf34305185",
+                  "title": "SQL-injectie",
+                  "status": "Open",
+                  "severity": "High",
+                  "type": "Information disclosure",
+                  "description": "Kwetsbaarheden in de API kunnen het mogelijk maken voor aanvallers om kwaadaardige SQL-injectieaanvallen uit te voeren en ongeautoriseerde toegang tot de database te verkrijgen.\nAanvallers kunnen kwaadaardige SQL-query's invoeren via invoervelden in de API en zo toegang krijgen tot, wijzigingen aanbrengen in of gegevens verwijderen uit de database.",
+                  "mitigation": "Hoog risico. Kan leiden tot ongeautoriseerde toegang tot en manipulatie van de database.",
+                  "modelType": "STRIDE",
+                  "new": false,
+                  "number": 3,
+                  "score": ""
+                },
+                {
+                  "id": "cff814bd-725c-4fd3-b8bc-e4e37f192255",
+                  "title": "Verkeerde configuratie",
+                  "status": "Open",
+                  "severity": "High",
+                  "type": "Tampering",
+                  "description": "Onjuiste configuratie van de website, API of database kan beveiligingslekken veroorzaken en aanvallers de mogelijkheid bieden om ongeautoriseerde toegang te verkrijgen of schadelijke acties uit te voeren.\nOnjuiste configuratie van toegangscontroles, misconfiguratie van de API-routes of slechte beveiligingsinstellingen kunnen aanvallers toegang geven tot gevoelige informatie.",
+                  "mitigation": " Laag tot hoog risico, afhankelijk van de aard van de configuratiefout. Kan leiden tot ongeautoriseerde toegang, gegevenslekken of andere beveiligingsproblemen.",
+                  "modelType": "STRIDE",
+                  "new": false,
+                  "number": 4,
+                  "score": ""
                 }
               ]
             }
@@ -415,6 +441,6 @@
     ],
     "diagramTop": 1,
     "reviewer": "John Brouwers",
-    "threatTop": 2
+    "threatTop": 4
   }
 }
