@@ -20,11 +20,12 @@
     setInterval(getToken, 115000);
 
     $(function(){
-       getToken()
+       getToken();
     });
 </script>
 
 <form asp-controller="ContactForm" asp-action="Index" method="post">
+    @Html.AntiForgeryToken()
     <input type="hidden" asp-for="Token"/>
     <!-- Input and Submit elements -->
     <div asp-validation-summary="ModelOnly"></div>
@@ -36,8 +37,8 @@
     <input asp-for="Subject" /> <br />
     <span asp-validation-for="Subject"></span><br />
     <label asp-for="Message"></label><br />
-    <input asp-for="Message" /> <br />
-    @*<textarea asp-for="Message"></textarea> <br />*@
+    @*<input asp-for="Message" /> <br />*@
+    <textarea asp-for="Message"></textarea> <br />
     <span asp-validation-for="Message"></span><br />
 
 

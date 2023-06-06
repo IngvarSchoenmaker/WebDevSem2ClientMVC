@@ -6,13 +6,7 @@ namespace WebDevSem2ClientMVC.Controllers
 {
     public class HomeController : Controller
     {
-        private DeveloperProfile Profile { get; set; }
-
-        public HomeController()
-        {
-            Profile = new("Ingvar Schoenmaker", "Ik heb verschillende skills zoals c#, js en Python", "Mijn naam is Ingvar Schoenmaker en ik ben 23 jaar oud.\r\n Ik volg de opleiding HBO-ICT en heb de richting ontwikkeling gekozen.\r\n Momenteel zit ik in mijn laatste jaar maar heb voor een reparatiesimester gekozen.\r\n", "https://media.licdn.com/dms/image/C5603AQGU4RhjRZQnxg/profile-displayphoto-shrink_800_800/0/1517319432686?e=1681344000&v=beta&t=F6_63VvXX5m6Vu3q0UfMy89AnpCZuCnPyTM64UleLs8", "ingvar.schoenmaker@windesheim.nl");
-
-        }
+        private DeveloperProfile? Profile { get; set; }
 
         public IActionResult Index()
         {
