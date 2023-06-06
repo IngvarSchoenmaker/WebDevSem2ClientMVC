@@ -96,7 +96,7 @@ namespace WebDevSem2ClientMVC.Areas.Identity.Pages.Account
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
             [Required]
-            [StringLength(100, ErrorMessage = "Het {0} moet minimaal {2} en maximaal {1} caracters lang zijn.", MinimumLength = 6)]
+            [StringLength(128, ErrorMessage = "Het {0} moet minimaal {2} en maximaal {1} karakters lang zijn.", MinimumLength = 12)]
             [DataType(DataType.Password)]
             [Display(Name = "Wachtwoord")]
             public string Password { get; set; }

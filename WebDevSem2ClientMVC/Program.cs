@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using WebDevSem2ClientMVC.Areas.Identity.Data;
 using Microsoft.Extensions.Options;
+using System.Net;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("ApplicationDBContextConnection") ?? throw new InvalidOperationException("Connection string 'ApplicationDBContextConnection' not found.");
@@ -44,23 +45,38 @@ builder.Services.AddHttpClient("localhost", c =>
     //c.BaseAddress = new Uri(builder.Configuration.GetValue<string>("LocalApi"));
     c.BaseAddress = new Uri("https://localhost:44384/api/");
 });
-//builder.Services.AddHsts(options =>
-//{
-//    options.Preload = true;
-//    options.IncludeSubDomains = true;
-//    options.MaxAge = TimeSpan.FromDays(60);
-//    //options.ExcludedHosts.Add("example.com");
-//    //options.ExcludedHosts.Add("www.example.com");
-//});
-////https://learn.microsoft.com/en-us/aspnet/core/performance/rate-limit?view=aspnetcore-7.0
-//builder.Services.AddRateLimiter(_ => _
-//    .AddFixedWindowLimiter(policyName: "fixed", options =>
-//    {
-//        options.PermitLimit = 4;
-//        options.Window = TimeSpan.FromSeconds(12);
-//        options.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
-//        options.QueueLimit = 2;
-//    }));
+
+ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls13;
+builder.Services.AddHsts(options =>
+{
+    options.Preload = true;
+    options.IncludeSubDomains = true;
+    options.MaxAge = TimeSpan.FromDays(60);
+    //options.ExcludedHosts.Add("example.com");
+    //options.ExcludedHosts.Add("www.example.com");
+});
+//https://learn.microsoft.com/en-us/aspnet/core/performance/rate-limit?view=aspnetcore-7.0
+builder.Services.AddRateLimiter(_ => _
+    .AddFixedWindowLimiter(policyName: "fixed", options =>
+    {
+        options.PermitLimit = 4;
+        options.Window = TimeSpan.FromSeconds(12);
+        options.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+        options.QueueLimit = 2;
+    }));
+
+builder.Services.Configure<IdentityOptions>(options =>
+{
+    // Default Password settings.
+    options.Password.RequireDigit = true;
+    options.Password.RequireLowercase = true;
+    options.Password.RequireNonAlphanumeric = true;
+    options.Password.RequireUppercase = true;
+    options.Password.RequiredLength = 12;
+    options.Password.RequiredUniqueChars = 1;
+});
+builder.Services.Configure<SecurityStampValidatorOptions>(o =>
+                   o.ValidationInterval = TimeSpan.FromMinutes(1));
 
 
 var app = builder.Build();
@@ -88,6 +104,7 @@ app.UseForwardedHeaders(new ForwardedHeadersOptions
 
 //app.UseMiddleware<CustomHeaderMiddleware>();
 
+
 app.UseAuthentication();
 
 app.UseHttpsRedirection();
@@ -99,6 +116,17 @@ app.UseCookiePolicy();
 app.UseRouting();
 
 app.UseAuthorization();
+
+app.Use(async (context, next) =>
+{
+    // Set what you want
+    context.Response.Headers.Add("X-Frame-Options", "DENY");
+    context.Response.Headers.Add("X-Content-Type-Options", "nosniff");
+    context.Response.Headers.Add("Referrer-Policy", "no-referrer");
+    // Important, without this line you create a "short circuit" to terminate your request.
+    await next();
+});
+
 
 app.MapRazorPages();
 

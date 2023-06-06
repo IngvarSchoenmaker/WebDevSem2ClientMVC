@@ -5,6 +5,7 @@ using SendGrid.Helpers.Mail;
 using System.Net.Http.Json;
 using System.Net.Http;
 using NuGet.Protocol;
+using System.Net;
 
 namespace WebDevSem2ClientMVC.Controllers
 {
@@ -41,6 +42,7 @@ namespace WebDevSem2ClientMVC.Controllers
             {
                 return View();
             }
+
 
             var client = _httpClientFactory.CreateClient("localhost");
 
