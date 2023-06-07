@@ -5,11 +5,12 @@ using System.Reflection.Metadata;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using WebDevSem2ClientMVC.Areas.Identity.Data;
 using WebDevSem2ClientMVC.Models;
 
 namespace WebDevSem2API.Entities;
 
-public partial class WebDevSem2MySqlContext : IdentityDbContext
+public partial class WebDevSem2MySqlContext : IdentityDbContext<ApplicationUser>
 {
     public WebDevSem2MySqlContext()
     {

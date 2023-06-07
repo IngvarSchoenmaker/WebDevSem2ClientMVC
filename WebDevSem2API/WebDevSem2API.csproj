@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="7.0.5" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.5">
@@ -30,10 +31,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\WebDevSem2ClientMVC\WebDevSem2ClientMVC.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Entities\" />
   </ItemGroup>
 
 </Project>

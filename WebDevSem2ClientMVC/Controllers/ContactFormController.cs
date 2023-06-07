@@ -30,7 +30,7 @@ namespace WebDevSem2ClientMVC.Controllers
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> Index(ContactFormModel model)
+        public async Task<IActionResult> FormPostAsync(ContactFormModel model)
         {
             //Verify token with google
             var captchaResult = await _captchaService.VerifyToken(model.Token!);
