@@ -10,17 +10,28 @@ using Microsoft.EntityFrameworkCore;
 using WebDevSem2ClientMVC.Areas.Identity.Data;
 using Microsoft.Extensions.Options;
 using System.Net;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("ApplicationDBContextConnection") ?? throw new InvalidOperationException("Connection string 'ApplicationDBContextConnection' not found.");
 
-builder.Services.AddDbContext<ApplicationDBContext>(options => options.UseSqlServer(connectionString));
+builder.Host.UseSerilog((context, configuration) =>
+    configuration.ReadFrom.Configuration(context.Configuration)
+);
+
+builder.Services.AddDbContext<ApplicationDBContext>(options =>
+{
+    options.UseSqlServer(connectionString);
+    options.EnableSensitiveDataLogging(true);
+});
 
 builder.Services.AddDefaultIdentity<ApplicationUser>(options => {
         options.SignIn.RequireConfirmedAccount = true;
         options.Lockout.MaxFailedAccessAttempts = 3;
         options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
-    }).AddEntityFrameworkStores<ApplicationDBContext>();
+    })
+    .AddRoles<IdentityRole>()
+    .AddEntityFrameworkStores<ApplicationDBContext>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews(options =>
@@ -81,6 +92,8 @@ builder.Services.Configure<SecurityStampValidatorOptions>(o =>
 
 var app = builder.Build();
 
+
+app.UseSerilogRequestLogging();
 //app.UseRateLimiter();
 
 // Configure the HTTP request pipeline.
@@ -116,6 +129,43 @@ app.UseCookiePolicy();
 app.UseRouting();
 
 app.UseAuthorization();
+
+using(var scope = app.Services.CreateScope())
+{
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+
+    var roles = new[] { "Admin", "Manager", "Player" };
+
+    foreach(var role in roles)
+    {
+        if (!await roleManager.RoleExistsAsync(role))
+            await roleManager.CreateAsync(new IdentityRole(role));
+    }
+}
+using(var scope = app.Services.CreateScope())
+{
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+
+    string email = "admin@admin.com";
+    string password = "PassWord123!";
+    string firstName = "Admin";
+    string lastName = "Admin";
+
+    if (await userManager.FindByEmailAsync(email) == null)
+    {
+        var user = new ApplicationUser();
+        user.UserName = email;
+        user.FirstName = firstName;
+        user.LastName = lastName;
+        user.Email = email;
+        user.EmailConfirmed = true;
+
+        await userManager.CreateAsync(user, password);
+
+
+        await userManager.AddToRoleAsync(user, "Admin");
+    }
+}
 
 app.Use(async (context, next) =>
 {

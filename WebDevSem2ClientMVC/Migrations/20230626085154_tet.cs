@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace WebDevSem2ClientMVC.Migrations
 {
     /// <inheritdoc />
-    public partial class Identity_user : Migration
+    public partial class tet : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

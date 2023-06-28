@@ -6,8 +6,6 @@ namespace WebDevSem2ClientMVC.Controllers
 {
     public class HomeController : Controller
     {
-        private DeveloperProfile? Profile { get; set; }
-
         public IActionResult Index()
         {
             return View();
@@ -16,10 +14,6 @@ namespace WebDevSem2ClientMVC.Controllers
         public IActionResult Privacy()
         {
             return View();
-        }
-        public IActionResult DeveloperProfile()
-        {
-            return View(Profile);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

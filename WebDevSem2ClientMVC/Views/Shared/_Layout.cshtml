@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -37,7 +38,7 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="DeveloperProfile">Developer Profile</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="DeveloperProfiles" asp-action="Index">Developer Profile</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="ContactForm" asp-action="Index">Contact the developer</a>
@@ -45,6 +46,12 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Uno" asp-action="Index">Uno game</a>
                         </li>
+                        @if (User.IsInRole("Admin") || User.IsInRole("Manager"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Administration" asp-action="Index">Admin dingen</a>
+                            </li>
+                        }
                     </ul>
                 </div>
                 <partial name="_LoginPartial"/>

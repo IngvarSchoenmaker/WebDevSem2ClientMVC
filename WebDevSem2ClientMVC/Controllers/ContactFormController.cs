@@ -6,9 +6,11 @@ using System.Net.Http.Json;
 using System.Net.Http;
 using NuGet.Protocol;
 using System.Net;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebDevSem2ClientMVC.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class ContactFormController : Controller
     {
         private readonly GoogleCaptchaService _captchaService;
@@ -30,7 +32,7 @@ namespace WebDevSem2ClientMVC.Controllers
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> FormPostAsync(ContactFormModel model)
+        public async Task<IActionResult> Index(ContactFormModel model)
         {
             //Verify token with google
             var captchaResult = await _captchaService.VerifyToken(model.Token!);

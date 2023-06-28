@@ -1,0 +1,52 @@
+﻿@model IEnumerable<WebDevSem2ClientMVC.Areas.Identity.Data.ApplicationUser>;
+@using Microsoft.AspNetCore.Identity
+@{
+    ViewData["Title"] = "ListUsers";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Lijst Gebruikers</h1>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LastName)
+            </th>
+            <td>
+                @Html.DisplayNameFor(model => model.Email)
+            </td>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FirstName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LastName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+                <td>
+                    @if(User.IsInRole("Admin")){
+                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                    }
+                    <a asp-action="RemovePassword" asp-route-id="@item.Id">RemovePassword</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
