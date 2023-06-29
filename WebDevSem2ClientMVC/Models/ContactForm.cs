@@ -6,7 +6,7 @@ using WebDevSem2ClientMVC.ViewModels;
 
 namespace WebDevSem2ClientMVC.Models
 {
-    public class ContactFormModel : ContactFormViewModel
+    public class ContactForm : ContactFormViewModel
     {
         
         [Required]

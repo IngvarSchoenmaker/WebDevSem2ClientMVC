@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebDevSem2ClientMVC.Models;
-using WebDevSem2API.Entities;
+using WebDevSem2ClientMVC.Areas.Identity.Data;
 
 namespace WebDevSem2API.Controllers
 {
@@ -14,53 +14,53 @@ namespace WebDevSem2API.Controllers
     [ApiController]
     public class ContactFormModelsController : ControllerBase
     {
-        private readonly WebDevSem2MySqlContext _context;
+        private readonly ApplicationDBContext _context;
 
-        public ContactFormModelsController(WebDevSem2MySqlContext context)
+        public ContactFormModelsController(ApplicationDBContext context)
         {
             _context = context;
         }
 
         // GET: api/ContactFormModels
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ContactFormModel>>> GetContactFormModel()
+        public async Task<ActionResult<IEnumerable<ContactForm>>> GetContactFormModel()
         {
-          if (_context.ContactFormModel == null)
+          if (_context.ContactForm == null)
           {
               return NotFound();
           }
-            return await _context.ContactFormModel.ToListAsync();
+            return await _context.ContactForm.ToListAsync();
         }
 
         // GET: api/ContactFormModels/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<ContactFormModel>> GetContactFormModel(int id)
+        public async Task<ActionResult<ContactForm>> GetContactFormModel(int id)
         {
-          if (_context.ContactFormModel == null)
-          {
-              return NotFound();
-          }
-            var contactFormModel = await _context.ContactFormModel.FindAsync(id);
+            if (_context.ContactForm == null)
+            {
+                return NotFound();
+            }
+            var contactForm = await _context.ContactForm.FindAsync(id);
 
-            if (contactFormModel == null)
+            if (contactForm == null)
             {
                 return NotFound();
             }
 
-            return contactFormModel;
+            return contactForm;
         }
 
         // PUT: api/ContactFormModels/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutContactFormModel(int id, ContactFormModel contactFormModel)
+        public async Task<IActionResult> PutContactFormModel(int id, ContactForm contactForm)
         {
-            if (id != contactFormModel.ContactFormId)
+            if (id != contactForm.ContactFormId)
             {
                 return BadRequest();
             }
 
-            _context.Entry(contactFormModel).State = EntityState.Modified;
+            _context.Entry(contactForm).State = EntityState.Modified;
 
             try
             {
@@ -84,13 +84,13 @@ namespace WebDevSem2API.Controllers
         // POST: api/ContactFormModels
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<ContactFormModel>> PostContactFormModel(ContactFormModel contactFormModel)
+        public async Task<ActionResult<ContactForm>> PostContactFormModel(ContactForm contactFormModel)
         {
-          if (_context.ContactFormModel == null)
+          if (_context.ContactForm == null)
           {
               return Problem("Entity set 'WebDevSem2MySqlContext.ContactFormModel'  is null.");
           }
-            _context.ContactFormModel.Add(contactFormModel);
+            _context.ContactForm.Add(contactFormModel);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetContactFormModel", new { id = contactFormModel.ContactFormId }, contactFormModel);
@@ -100,17 +100,17 @@ namespace WebDevSem2API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteContactFormModel(int id)
         {
-            if (_context.ContactFormModel == null)
+            if (_context.ContactForm == null)
             {
                 return NotFound();
             }
-            var contactFormModel = await _context.ContactFormModel.FindAsync(id);
+            var contactFormModel = await _context.ContactForm.FindAsync(id);
             if (contactFormModel == null)
             {
                 return NotFound();
             }
 
-            _context.ContactFormModel.Remove(contactFormModel);
+            _context.ContactForm.Remove(contactFormModel);
             await _context.SaveChangesAsync();
 
             return NoContent();
@@ -118,7 +118,7 @@ namespace WebDevSem2API.Controllers
 
         private bool ContactFormModelExists(int id)
         {
-            return (_context.ContactFormModel?.Any(e => e.ContactFormId == id)).GetValueOrDefault();
+            return (_context.ContactForm?.Any(e => e.ContactFormId == id)).GetValueOrDefault();
         }
     }
 }

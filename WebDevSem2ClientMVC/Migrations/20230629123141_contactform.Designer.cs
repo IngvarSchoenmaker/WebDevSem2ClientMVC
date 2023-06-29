@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebDevSem2ClientMVC.Areas.Identity.Data;
 
@@ -11,9 +12,11 @@ using WebDevSem2ClientMVC.Areas.Identity.Data;
 namespace WebDevSem2ClientMVC.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20230629123141_contactform")]
+    partial class contactform
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -239,244 +242,6 @@ namespace WebDevSem2ClientMVC.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("WebDevSem2ClientMVC.Models.Card", b =>
-                {
-                    b.Property<int>("CardId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CardId"));
-
-                    b.Property<int>("CardColor")
-                        .HasColumnType("int");
-
-                    b.Property<string>("CardValue")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("CardId");
-
-                    b.ToTable("Card");
-
-                    b.HasData(
-                        new
-                        {
-                            CardId = 1,
-                            CardColor = 1,
-                            CardValue = "1"
-                        },
-                        new
-                        {
-                            CardId = 2,
-                            CardColor = 2,
-                            CardValue = "1"
-                        },
-                        new
-                        {
-                            CardId = 3,
-                            CardColor = 3,
-                            CardValue = "1"
-                        },
-                        new
-                        {
-                            CardId = 4,
-                            CardColor = 4,
-                            CardValue = "1"
-                        },
-                        new
-                        {
-                            CardId = 5,
-                            CardColor = 1,
-                            CardValue = "2"
-                        },
-                        new
-                        {
-                            CardId = 6,
-                            CardColor = 2,
-                            CardValue = "2"
-                        },
-                        new
-                        {
-                            CardId = 7,
-                            CardColor = 3,
-                            CardValue = "2"
-                        },
-                        new
-                        {
-                            CardId = 8,
-                            CardColor = 4,
-                            CardValue = "2"
-                        },
-                        new
-                        {
-                            CardId = 9,
-                            CardColor = 1,
-                            CardValue = "3"
-                        },
-                        new
-                        {
-                            CardId = 10,
-                            CardColor = 2,
-                            CardValue = "3"
-                        },
-                        new
-                        {
-                            CardId = 11,
-                            CardColor = 3,
-                            CardValue = "3"
-                        },
-                        new
-                        {
-                            CardId = 12,
-                            CardColor = 4,
-                            CardValue = "3"
-                        },
-                        new
-                        {
-                            CardId = 13,
-                            CardColor = 1,
-                            CardValue = "4"
-                        },
-                        new
-                        {
-                            CardId = 14,
-                            CardColor = 2,
-                            CardValue = "4"
-                        },
-                        new
-                        {
-                            CardId = 15,
-                            CardColor = 3,
-                            CardValue = "4"
-                        },
-                        new
-                        {
-                            CardId = 16,
-                            CardColor = 4,
-                            CardValue = "4"
-                        },
-                        new
-                        {
-                            CardId = 17,
-                            CardColor = 1,
-                            CardValue = "5"
-                        },
-                        new
-                        {
-                            CardId = 18,
-                            CardColor = 2,
-                            CardValue = "5"
-                        },
-                        new
-                        {
-                            CardId = 19,
-                            CardColor = 3,
-                            CardValue = "5"
-                        },
-                        new
-                        {
-                            CardId = 20,
-                            CardColor = 4,
-                            CardValue = "5"
-                        },
-                        new
-                        {
-                            CardId = 21,
-                            CardColor = 1,
-                            CardValue = "6"
-                        },
-                        new
-                        {
-                            CardId = 22,
-                            CardColor = 2,
-                            CardValue = "6"
-                        },
-                        new
-                        {
-                            CardId = 23,
-                            CardColor = 3,
-                            CardValue = "6"
-                        },
-                        new
-                        {
-                            CardId = 24,
-                            CardColor = 4,
-                            CardValue = "6"
-                        },
-                        new
-                        {
-                            CardId = 25,
-                            CardColor = 1,
-                            CardValue = "7"
-                        },
-                        new
-                        {
-                            CardId = 26,
-                            CardColor = 2,
-                            CardValue = "7"
-                        },
-                        new
-                        {
-                            CardId = 27,
-                            CardColor = 3,
-                            CardValue = "7"
-                        },
-                        new
-                        {
-                            CardId = 28,
-                            CardColor = 4,
-                            CardValue = "7"
-                        },
-                        new
-                        {
-                            CardId = 29,
-                            CardColor = 1,
-                            CardValue = "8"
-                        },
-                        new
-                        {
-                            CardId = 30,
-                            CardColor = 2,
-                            CardValue = "8"
-                        },
-                        new
-                        {
-                            CardId = 31,
-                            CardColor = 3,
-                            CardValue = "8"
-                        },
-                        new
-                        {
-                            CardId = 32,
-                            CardColor = 4,
-                            CardValue = "8"
-                        },
-                        new
-                        {
-                            CardId = 33,
-                            CardColor = 1,
-                            CardValue = "9"
-                        },
-                        new
-                        {
-                            CardId = 34,
-                            CardColor = 2,
-                            CardValue = "9"
-                        },
-                        new
-                        {
-                            CardId = 35,
-                            CardColor = 3,
-                            CardValue = "9"
-                        },
-                        new
-                        {
-                            CardId = 36,
-                            CardColor = 4,
-                            CardValue = "9"
-                        });
-                });
-
             modelBuilder.Entity("WebDevSem2ClientMVC.Models.Cards", b =>
                 {
                     b.Property<int>("CardsId")
@@ -485,8 +250,13 @@ namespace WebDevSem2ClientMVC.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CardsId"));
 
-                    b.Property<int>("CardId")
-                        .HasColumnType("int");
+                    b.Property<string>("CardColors")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CardValue")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("GameId")
                         .HasColumnType("int");
@@ -499,8 +269,6 @@ namespace WebDevSem2ClientMVC.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("CardsId");
-
-                    b.HasIndex("CardId");
 
                     b.HasIndex("GameId");
 
@@ -591,23 +359,19 @@ namespace WebDevSem2ClientMVC.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("GameId"));
 
-                    b.Property<int>("CurrentCardCardId")
-                        .HasColumnType("int");
-
                     b.Property<string>("GameName")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<int>("GameStatus")
-                        .HasColumnType("int");
+                    b.Property<string>("GameStatus")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("NumberOfPlayers")
                         .HasColumnType("int");
 
                     b.HasKey("GameId");
-
-                    b.HasIndex("CurrentCardCardId");
 
                     b.ToTable("Game");
                 });
@@ -674,12 +438,6 @@ namespace WebDevSem2ClientMVC.Migrations
 
             modelBuilder.Entity("WebDevSem2ClientMVC.Models.Cards", b =>
                 {
-                    b.HasOne("WebDevSem2ClientMVC.Models.Card", "Card")
-                        .WithMany()
-                        .HasForeignKey("CardId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("WebDevSem2ClientMVC.Models.Game", "Game")
                         .WithMany("Cards")
                         .HasForeignKey("GameId")
@@ -690,22 +448,9 @@ namespace WebDevSem2ClientMVC.Migrations
                         .WithMany()
                         .HasForeignKey("PlayerId");
 
-                    b.Navigation("Card");
-
                     b.Navigation("Game");
 
                     b.Navigation("Player");
-                });
-
-            modelBuilder.Entity("WebDevSem2ClientMVC.Models.Game", b =>
-                {
-                    b.HasOne("WebDevSem2ClientMVC.Models.Card", "CurrentCard")
-                        .WithMany()
-                        .HasForeignKey("CurrentCardCardId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("CurrentCard");
                 });
 
             modelBuilder.Entity("WebDevSem2ClientMVC.Models.Game", b =>
