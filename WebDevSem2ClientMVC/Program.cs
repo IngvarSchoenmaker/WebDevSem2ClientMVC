@@ -22,7 +22,7 @@ builder.Host.UseSerilog((context, configuration) =>
 builder.Services.AddDbContext<ApplicationDBContext>(options =>
 {
     options.UseSqlServer(connectionString);
-    options.EnableSensitiveDataLogging(true);
+    options.EnableSensitiveDataLogging(false);
 });
 
 builder.Services.AddDefaultIdentity<ApplicationUser>(options => {
