@@ -18,8 +18,8 @@ namespace WebDevSem2ClientMVC.Models
         public int NumberOfPlayers { get; set; }
         [Required]
         public GameStatus GameStatus { get; set; }
-        public Card CurrentCard { get; set; }
-        public virtual ICollection<ApplicationUser> Players { get; set; }
-        public virtual IEnumerable<Cards> Cards { get; set; }
+        public Card? CurrentCard { get; set; }
+        public virtual ICollection<ApplicationUser>? Players { get; set; }
+        public virtual IEnumerable<Cards>? Cards { get; set; }
     }
 }

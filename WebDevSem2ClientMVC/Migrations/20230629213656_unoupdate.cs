@@ -2,18 +2,16 @@
 
 #nullable disable
 
-#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
-
 namespace WebDevSem2ClientMVC.Migrations
 {
     /// <inheritdoc />
-    public partial class updateUno : Migration
+    public partial class unoupdate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "CardColors",
+                name: "CardColor",
                 table: "Cards");
 
             migrationBuilder.DropColumn(
@@ -32,8 +30,7 @@ namespace WebDevSem2ClientMVC.Migrations
                 name: "CurrentCardCardId",
                 table: "Game",
                 type: "int",
-                nullable: false,
-                defaultValue: 0);
+                nullable: true);
 
             migrationBuilder.AddColumn<int>(
                 name: "CardId",
@@ -54,49 +51,6 @@ namespace WebDevSem2ClientMVC.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Card", x => x.CardId);
-                });
-
-            migrationBuilder.InsertData(
-                table: "Card",
-                columns: new[] { "CardId", "CardColor", "CardValue" },
-                values: new object[,]
-                {
-                    { 1, 1, "1" },
-                    { 2, 2, "1" },
-                    { 3, 3, "1" },
-                    { 4, 4, "1" },
-                    { 5, 1, "2" },
-                    { 6, 2, "2" },
-                    { 7, 3, "2" },
-                    { 8, 4, "2" },
-                    { 9, 1, "3" },
-                    { 10, 2, "3" },
-                    { 11, 3, "3" },
-                    { 12, 4, "3" },
-                    { 13, 1, "4" },
-                    { 14, 2, "4" },
-                    { 15, 3, "4" },
-                    { 16, 4, "4" },
-                    { 17, 1, "5" },
-                    { 18, 2, "5" },
-                    { 19, 3, "5" },
-                    { 20, 4, "5" },
-                    { 21, 1, "6" },
-                    { 22, 2, "6" },
-                    { 23, 3, "6" },
-                    { 24, 4, "6" },
-                    { 25, 1, "7" },
-                    { 26, 2, "7" },
-                    { 27, 3, "7" },
-                    { 28, 4, "7" },
-                    { 29, 1, "8" },
-                    { 30, 2, "8" },
-                    { 31, 3, "8" },
-                    { 32, 4, "8" },
-                    { 33, 1, "9" },
-                    { 34, 2, "9" },
-                    { 35, 3, "9" },
-                    { 36, 4, "9" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -122,8 +76,7 @@ namespace WebDevSem2ClientMVC.Migrations
                 table: "Game",
                 column: "CurrentCardCardId",
                 principalTable: "Card",
-                principalColumn: "CardId",
-                onDelete: ReferentialAction.Cascade);
+                principalColumn: "CardId");
         }
 
         /// <inheritdoc />

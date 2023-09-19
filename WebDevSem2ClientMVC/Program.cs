@@ -32,7 +32,6 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options => {
     })
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDBContext>();
-
 // Add services to the container.
 builder.Services.AddControllersWithViews(options =>
 {
@@ -90,6 +89,9 @@ builder.Services.Configure<SecurityStampValidatorOptions>(o =>
                    o.ValidationInterval = TimeSpan.FromMinutes(1));
 
 
+
+
+
 var app = builder.Build();
 
 
@@ -142,6 +144,7 @@ using(var scope = app.Services.CreateScope())
             await roleManager.CreateAsync(new IdentityRole(role));
     }
 }
+
 using(var scope = app.Services.CreateScope())
 {
     var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();

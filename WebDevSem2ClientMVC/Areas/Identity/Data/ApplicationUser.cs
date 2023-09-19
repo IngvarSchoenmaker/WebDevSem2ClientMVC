@@ -13,6 +13,6 @@ public class ApplicationUser : IdentityUser
     public string FirstName { get; set; }
     public string LastName { get; set; }
     public int? GameId { get; set; }
-    public virtual Game Game { get; set; }
+    public virtual Game? Game { get; set; }
 }
 

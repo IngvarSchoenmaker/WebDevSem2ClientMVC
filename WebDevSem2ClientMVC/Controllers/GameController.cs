@@ -6,19 +6,26 @@ namespace WebDevSem2ClientMVC.Controllers
     using System.Collections.Generic;
     using System.Net.Http;
     using System.Net.Http.Headers;
+    using System.Text;
     using System.Threading.Tasks;
+    using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Newtonsoft.Json;
+    using WebDevSem2ClientMVC.Areas.Identity.Data;
     using WebDevSem2ClientMVC.Models;
 
+    [Authorize]
     public class GameController : Controller
     {
         private readonly HttpClient _httpClient;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public GameController()
+        public GameController(UserManager<ApplicationUser> userManager)
         {
+            _userManager = userManager;
             _httpClient = new HttpClient();
-            _httpClient.BaseAddress = new Uri("https://unopizza.hbo-ict.org/api/"); // Vervang dit door de juiste API-URL
+            _httpClient.BaseAddress = new Uri("https://localhost:44384/api/game/"); // Vervang dit door de juiste API-URL
             _httpClient.DefaultRequestHeaders.Accept.Clear();
             _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }
@@ -33,10 +40,20 @@ namespace WebDevSem2ClientMVC.Controllers
         {
             return View();
         }
-
+        public async Task<IActionResult> Game(int gameId)
+        {
+            //game.Players = _userManager.Users;
+            if (ModelState.IsValid)
+            {
+                await JoinGameInApi(gameId);
+                return RedirectToAction($"Game/{gameId}");
+            }
+            return View();
+        }
         [HttpPost]
         public async Task<IActionResult> Create(Game game)
         {
+            //game.Players = _userManager.Users;
             if (ModelState.IsValid)
             {
                 await CreateGameInApi(game);
@@ -75,6 +92,18 @@ namespace WebDevSem2ClientMVC.Controllers
 
             HttpResponseMessage response = await _httpClient.PostAsync("games", content);
             response.EnsureSuccessStatusCode();
+        }
+        private async Task JoinGameInApi(int gameId)
+        {
+            var context = HttpContext;
+            string username = context.User.Identity.Name;
+            ApplicationUser user = await _userManager.FindByNameAsync(username);
+            if (user == null)
+            {
+                NotFound();
+            }
+            //HttpResponseMessage response = await _httpClient.PatchAsync($"games/player/{gameId}/{user.Id}");
+            //response.EnsureSuccessStatusCode();
         }
 
         private async Task<Game> GetGameFromApi(int id)

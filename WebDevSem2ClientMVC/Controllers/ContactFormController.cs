@@ -7,18 +7,20 @@ using System.Net.Http;
 using NuGet.Protocol;
 using System.Net;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using WebDevSem2ClientMVC.Areas.Identity.Data;
 
 namespace WebDevSem2ClientMVC.Controllers
 {
-    [Authorize(Roles = "Admin")]
     public class ContactFormController : Controller
     {
         private readonly GoogleCaptchaService _captchaService;
         private readonly IConfiguration Configuration;
+
         public IHttpClientFactory _httpClientFactory { get; set; }
 
         public ContactFormController(GoogleCaptchaService captchaService, IConfiguration configuration, IHttpClientFactory httpClientFactory) 
-        { 
+        {
             _captchaService = captchaService;
             Configuration = configuration;
             _httpClientFactory = httpClientFactory;
@@ -60,7 +62,7 @@ namespace WebDevSem2ClientMVC.Controllers
 
 
             //Send mail
-            Execute().Wait();
+            Execute(model).Wait();
             
 
             //var url = new Uri();
@@ -70,15 +72,15 @@ namespace WebDevSem2ClientMVC.Controllers
             return new RedirectResult(url: "/ContactForm/FormSuccess", permanent: true, preserveMethod: true);
         }
 
-        static async Task Execute()
+        static async Task Execute(ContactForm model)
         {
             var apiKey = Environment.GetEnvironmentVariable("SENDGRID_API_KEY");
             var client = new SendGridClient(apiKey);
-            var from = new EmailAddress("test@example.com", "Example User");
-            var subject = "Sending with SendGrid is Fun";
-            var to = new EmailAddress("test@example.com", "Example User");
-            var plainTextContent = "and easy to do anywhere, even with C#";
-            var htmlContent = "<strong>and easy to do anywhere, even with C#</strong>";
+            var from = new EmailAddress("ingvar.schoenmaker@windesheim.nl", "Ingvar Schoenmaker");
+            var subject = model.Subject;
+            var to = new EmailAddress(model.Email, model.Email);
+            var plainTextContent = model.Message;
+            var htmlContent = $"<strong>{model.Message}</strong>";
             var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
             var response = await client.SendEmailAsync(msg);
         }

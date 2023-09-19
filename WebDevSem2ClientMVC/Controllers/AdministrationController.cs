@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SendGrid.Helpers.Mail;
+using System.Data;
 using System.Security.Claims;
 using WebDevSem2ClientMVC.Areas.Identity.Data;
 using WebDevSem2ClientMVC.Models;
@@ -17,6 +19,7 @@ namespace WebDevSem2ClientMVC.Controllers
         public IEnumerable<string?> Claims { get; set; } = new List<string?>();
         public IEnumerable<string?> NewRoles { get; set; } = new List<string?>();
     }
+    [Authorize(Roles = "Admin,Manager")]
     public class AdministrationController : Controller
     {
         private readonly ILogger _logger; 
@@ -48,7 +51,7 @@ namespace WebDevSem2ClientMVC.Controllers
             return View(new UserView() { User = user, Roles = roles, Claims = claims });
         }
 
-        [HttpPatch]
+        [HttpPost]
         public async Task<IActionResult> Edit(string id, UserView userView)
         {
             _logger.LogInformation("edit as generated requested for {@userId}, {@DateTime}", id, DateTime.Now);
@@ -56,14 +59,20 @@ namespace WebDevSem2ClientMVC.Controllers
             {
                 return NotFound();
             }
-
+            var test = userView.User.Game;
             if (ModelState.IsValid)
             {
                 try
                 {
-                    await _userManager.RemoveFromRolesAsync(userView.User, await _userManager.GetRolesAsync(userView.User));
-                    //await _userManager.AddToRolesAsync(userView.User, userView.NewRoles);
-                    //await _userManager.UpdateAsync(userView.User);
+                    var user = await _userManager.FindByIdAsync(id);
+                    if (user == null)
+                    {
+                        return NotFound();
+                    }
+                    var roles = await _userManager.GetRolesAsync(user);
+                    await _userManager.RemoveFromRolesAsync(user, roles);
+                    await _userManager.AddToRolesAsync(user, userView.NewRoles);
+                    await _userManager.UpdateAsync(user);
 
                 }
                 catch (Exception ex)
