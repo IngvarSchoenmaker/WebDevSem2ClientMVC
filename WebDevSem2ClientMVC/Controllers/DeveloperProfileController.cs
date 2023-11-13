@@ -10,11 +10,11 @@ using WebDevSem2ClientMVC.Models;
 
 namespace WebDevSem2ClientMVC.Controllers
 {
-    public class DeveloperProfilesController : Controller
+    public class DeveloperProfileController : Controller, IDeveloperProfileController
     {
         private readonly ApplicationDBContext _context;
 
-        public DeveloperProfilesController(ApplicationDBContext context)
+        public DeveloperProfileController(ApplicationDBContext context)
         {
             _context = context;
         }
@@ -22,9 +22,9 @@ namespace WebDevSem2ClientMVC.Controllers
         // GET: DeveloperProfiles
         public async Task<IActionResult> Index()
         {
-              return _context.DeveloperProfile != null ? 
-                          View(await _context.DeveloperProfile.ToListAsync()) :
-                          Problem("Entity set 'ApplicationDBContext.DeveloperProfile'  is null.");
+            return _context.DeveloperProfile != null ?
+                        View(await _context.DeveloperProfile.ToListAsync()) :
+                        Problem("Entity set 'ApplicationDBContext.DeveloperProfile'  is null.");
         }
 
         // GET: DeveloperProfiles/Details/5
@@ -150,14 +150,14 @@ namespace WebDevSem2ClientMVC.Controllers
             {
                 _context.DeveloperProfile.Remove(developerProfile);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool DeveloperProfileExists(int id)
         {
-          return (_context.DeveloperProfile?.Any(e => e.DeveloperProfileId == id)).GetValueOrDefault();
+            return (_context.DeveloperProfile?.Any(e => e.DeveloperProfileId == id)).GetValueOrDefault();
         }
     }
 }

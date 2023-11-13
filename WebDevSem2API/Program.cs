@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
-using MySql.EntityFrameworkCore.Extensions;
-using WebDevSem2ClientMVC.Models;
-using WebDevSem2API.Entities;
+using WebDevSem2API.Controllers;
+using WebDevSem2ClientMVC.Areas.Identity.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,13 +8,19 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
-builder.Services.AddDbContext<WebDevSem2MySqlContext>(options => {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+var connectionString = builder.Configuration.GetConnectionString("ApplicationDBContextConnection") ?? throw new InvalidOperationException("Connection string 'ApplicationDBContextConnection' not found.");
+
+builder.Services.AddDbContext<ApplicationDBContext>(options =>
+{
+    options.UseSqlServer(connectionString);
+    options.EnableSensitiveDataLogging(false);
 });
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddTransient<IUnoRepository, UnoRepository>();
 
 var app = builder.Build();
 

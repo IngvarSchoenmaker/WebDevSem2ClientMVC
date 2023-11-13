@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Linq;
+using System.Drawing;
 using System.Reflection.Emit;
 using WebDevSem2ClientMVC.Areas.Identity.Data;
 using WebDevSem2ClientMVC.Models;
@@ -36,7 +38,30 @@ public class ApplicationDBContext : IdentityDbContext<ApplicationUser>
                 Email = "ingvar.schoenmaker@windesheim.nl"
             }
         );
+        int cardId = 1;
+        for (int value = 1; value <= 9; value++)
+        {
+            for (int color = 1; color <= 4; color++)
+            {
+                modelBuilder.Entity<Card>().HasData(
+                    new
+                    {
+                        CardId = cardId,
+                        CardValue = value.ToString(),
+                        CardColor = color
+                    }
+                );
+                cardId++;
+            }
+        }
+
+
     }
 
-    public DbSet<WebDevSem2ClientMVC.Models.DeveloperProfile> DeveloperProfile { get; set; } = default!;
+    public virtual DbSet<DeveloperProfile> DeveloperProfile { get; set; } = default!;
+    public virtual DbSet<ContactForm> ContactForm { get; set; } = default!;
+    public virtual DbSet<Game> Game { get; set; } = default!;
+    public virtual DbSet<Cards> Cards { get; set; } = default!;
+    public virtual DbSet<Card> Card { get; set; } = default!;
+    public virtual DbSet<ApplicationUser> Player { get; set; } = default!;
 }

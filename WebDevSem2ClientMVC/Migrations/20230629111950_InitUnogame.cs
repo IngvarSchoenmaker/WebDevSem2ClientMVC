@@ -2,10 +2,10 @@
 
 #nullable disable
 
-namespace WebDevSem2API.Migrations
+namespace WebDevSem2ClientMVC.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate2 : Migration
+    public partial class InitUnogame : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
