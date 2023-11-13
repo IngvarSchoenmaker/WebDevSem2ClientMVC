@@ -58,10 +58,10 @@ public class ApplicationDBContext : IdentityDbContext<ApplicationUser>
 
     }
 
-    public DbSet<DeveloperProfile> DeveloperProfile { get; set; } = default!;
-    public DbSet<ContactForm> ContactForm { get; set; } = default!;
-    public DbSet<Game> Game { get; set; } = default!;
-    public DbSet<Cards> Cards { get; set; } = default!;
-    public DbSet<Card> Card { get; set; } = default!;
-    public DbSet<ApplicationUser> Player { get; set; } = default!;
+    public virtual DbSet<DeveloperProfile> DeveloperProfile { get; set; } = default!;
+    public virtual DbSet<ContactForm> ContactForm { get; set; } = default!;
+    public virtual DbSet<Game> Game { get; set; } = default!;
+    public virtual DbSet<Cards> Cards { get; set; } = default!;
+    public virtual DbSet<Card> Card { get; set; } = default!;
+    public virtual DbSet<ApplicationUser> Player { get; set; } = default!;
 }
