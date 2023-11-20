@@ -12,8 +12,8 @@
         <a asp-action="Create">Nieuwe developer</a>
     </p>
 }
-
-<table class="table">
+<div class="table-responsive">
+    <table class="table">
     <thead>
         <tr>
             <th>
@@ -31,7 +31,10 @@
             <th>
                 @Html.DisplayNameFor(model => model.Email)
             </th>
-            <th></th>
+            @if (User.IsInRole("Admin") || User.IsInRole("Manager"))
+            {
+                <th></th>
+            }
         </tr>
     </thead>
     <tbody>
@@ -47,17 +50,21 @@
                 @Html.DisplayFor(modelItem => item.Discription)
             </td>
             <td>
-                <img src="@Html.DisplayFor(modelItem => item.PictureURL)" />
+                <img src="@Url.Content(item.PictureURL)" style="max-width: 60px; max-height: 60px;" />
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Email)
             </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.DeveloperProfileId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.DeveloperProfileId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.DeveloperProfileId">Delete</a>
-            </td>
+                @if (User.IsInRole("Admin") || User.IsInRole("Manager"))
+                {
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.DeveloperProfileId">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.DeveloperProfileId">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.DeveloperProfileId">Delete</a>
+                </td>
+                }
         </tr>
 }
     </tbody>
 </table>
+</div>

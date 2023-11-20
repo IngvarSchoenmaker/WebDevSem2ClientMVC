@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -22,9 +23,14 @@ namespace WebDevSem2ClientMVC.Controllers
         // GET: DeveloperProfiles
         public async Task<IActionResult> Index()
         {
-            return _context.DeveloperProfile != null ?
-                        View(await _context.DeveloperProfile.ToListAsync()) :
-                        Problem("Entity set 'ApplicationDBContext.DeveloperProfile'  is null.");
+            var developerProfiles = await _context.DeveloperProfile.ToListAsync();
+
+            if (developerProfiles != null && developerProfiles.Any())
+            {
+                return View(developerProfiles);
+            }
+
+            return Problem("No developer profiles found.");
         }
 
         // GET: DeveloperProfiles/Details/5
@@ -66,7 +72,7 @@ namespace WebDevSem2ClientMVC.Controllers
             }
             return View(developerProfile);
         }
-
+        [Authorize(Roles = "Admin,Manager")]
         // GET: DeveloperProfiles/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -86,6 +92,7 @@ namespace WebDevSem2ClientMVC.Controllers
         // POST: DeveloperProfiles/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Admin,Manager")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("DeveloperProfileId,Name,Skills,Discription,PictureURL,Email")] DeveloperProfile developerProfile)
@@ -117,7 +124,7 @@ namespace WebDevSem2ClientMVC.Controllers
             }
             return View(developerProfile);
         }
-
+        [Authorize(Roles = "Admin,Manager")]
         // GET: DeveloperProfiles/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
@@ -135,6 +142,7 @@ namespace WebDevSem2ClientMVC.Controllers
 
             return View(developerProfile);
         }
+        [Authorize(Roles = "Admin,Manager")]
 
         // POST: DeveloperProfiles/Delete/5
         [HttpPost, ActionName("Delete")]

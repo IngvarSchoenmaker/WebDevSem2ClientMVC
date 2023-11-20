@@ -38,26 +38,27 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="DeveloperProfiles" asp-action="Index">Developer Profile</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="DeveloperProfile" asp-action="Index">Developer Profile</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="ContactForm" asp-action="Index">Contact the developer</a>
                         </li>
                         @if (User.Identity.IsAuthenticated)
                         {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Game" asp-action="Index">Uno game</a>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Game" asp-action="Index">Uno game</a>
                         </li>
                         }
                         @if (User.IsInRole("Admin") || User.IsInRole("Manager"))
                         {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Administration" asp-action="Index">Admin dingen</a>
-                            </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Administration" asp-action="Index">Admin dingen</a>
+                        </li>
                         }
                     </ul>
+                    <partial name="_LoginPartial" />
+
                 </div>
-                <partial name="_LoginPartial"/>
             </div>
         </nav>
     </header>

@@ -45,7 +45,7 @@ namespace UnitTest
 
             // Assert
             Assert.That(result, Is.Not.Null);
-            Assert.That(result, Is.InstanceOf<ViewResult>());
+            Assert.That(result, Is.InstanceOf<ObjectResult>());
             // Voer verdere asserties uit op de viewResult zoals controleren op modelgegevens, statuscodes, enz.
         }
 
@@ -109,8 +109,10 @@ namespace UnitTest
                 // Assert
                 Assert.That(result, Is.InstanceOf<ViewResult>());
                 var viewResult = result as ViewResult;
+                Assert.That(viewResult?.Model, Is.Not.Null);
                 Assert.That(viewResult.Model, Is.InstanceOf<DeveloperProfile>());
                 var model = viewResult.Model as DeveloperProfile;
+                Assert.That(model, Is.Not.Null);
                 Assert.That(model.DeveloperProfileId, Is.EqualTo(1));
             }
         }
@@ -242,6 +244,7 @@ namespace UnitTest
 
                 // Voeg meer assertions toe afhankelijk van wat je wilt valideren
                 var model = result.Model as DeveloperProfile;
+                Assert.That(model, Is.Not.Null);
                 Assert.That(model.DeveloperProfileId, Is.EqualTo(1));
                 Assert.That(model.Name, Is.EqualTo("Sample Developer"));
                 Assert.That(model.Skills, Is.EqualTo("Sample Skills"));
@@ -328,13 +331,14 @@ namespace UnitTest
 
                 // Assert
                 Assert.That(result, Is.Not.Null);
-                Assert.That(result.ViewName, Is.Null.Or.Empty);
-                Assert.That(result.Model, Is.InstanceOf<DeveloperProfile>());
-                Assert.That(controller.ModelState.IsValid, Is.False);
+                Assert.Multiple(() =>
+                {
+                    Assert.That(result.ViewName, Is.Null.Or.Empty);
+                    Assert.That(result.Model, Is.InstanceOf<DeveloperProfile>());
+                    Assert.That(controller.ModelState.IsValid, Is.False);
+                });
             }
         }
-
-
 
         [Test]
         public async Task Edit_Post_NonExistentProfile_ReturnsNotFound()
