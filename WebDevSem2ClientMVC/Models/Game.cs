@@ -21,5 +21,6 @@ namespace WebDevSem2ClientMVC.Models
         public Card? CurrentCard { get; set; }
         public virtual ICollection<ApplicationUser>? Players { get; set; }
         public virtual IEnumerable<Cards>? Cards { get; set; }
+
     }
 }

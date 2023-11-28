@@ -37,7 +37,7 @@ namespace UnitTest
         public async Task Index_ReturnsView()
         {
             // Arrange
-            var context = new ApplicationDBContext(_dbContextOptions); // options moet je juist configureren voor tests
+            var context = new ApplicationDBContext(_dbContextOptions);
             var controller = new DeveloperProfileController(context);
 
             // Act
@@ -46,7 +46,6 @@ namespace UnitTest
             // Assert
             Assert.That(result, Is.Not.Null);
             Assert.That(result, Is.InstanceOf<ObjectResult>());
-            // Voer verdere asserties uit op de viewResult zoals controleren op modelgegevens, statuscodes, enz.
         }
 
 
@@ -104,7 +103,7 @@ namespace UnitTest
                 var controller = new DeveloperProfileController(context);
 
                 // Act
-                var result = await controller.Details(1); // Verzend het gewenste ID
+                var result = await controller.Details(1);
 
                 // Assert
                 Assert.That(result, Is.InstanceOf<ViewResult>());
@@ -127,15 +126,10 @@ namespace UnitTest
 
             using (var context = new ApplicationDBContext(dbContextOptions))
             {
-                // Voeg geen ontwikkelaarsprofiel toe aan de in-memory database
-            }
-
-            using (var context = new ApplicationDBContext(dbContextOptions))
-            {
                 var controller = new DeveloperProfileController(context);
 
                 // Act
-                var result = await controller.Details(1); // Verzend een ongeldig ID
+                var result = await controller.Details(1);
 
                 // Assert
                 Assert.That(result, Is.InstanceOf<NotFoundResult>());
@@ -218,7 +212,6 @@ namespace UnitTest
 
             using (var context = new ApplicationDBContext(dbContextOptions))
             {
-                // Voeg een voorbeeld DeveloperProfile toe aan de in-memory database
                 var sampleDeveloperProfile = new DeveloperProfile
                 {
                     DeveloperProfileId = 1,
@@ -242,7 +235,6 @@ namespace UnitTest
                 Assert.That(result.ViewName, Is.Null.Or.Empty.Or.EqualTo("Edit"));
                 Assert.That(result.Model, Is.InstanceOf<DeveloperProfile>());
 
-                // Voeg meer assertions toe afhankelijk van wat je wilt valideren
                 var model = result.Model as DeveloperProfile;
                 Assert.That(model, Is.Not.Null);
                 Assert.That(model.DeveloperProfileId, Is.EqualTo(1));
