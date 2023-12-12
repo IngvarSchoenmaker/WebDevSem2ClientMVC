@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using WebDevSem2ClientMVC.Areas.Identity.Data;
+using WebDevSem2ClientMVC.Interfaces;
 using WebDevSem2ClientMVC.Models;
 
 namespace WebDevSem2ClientMVC.Controllers

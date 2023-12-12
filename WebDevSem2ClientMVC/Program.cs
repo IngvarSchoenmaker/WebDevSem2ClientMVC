@@ -11,6 +11,9 @@ using WebDevSem2ClientMVC.Areas.Identity.Data;
 using Microsoft.Extensions.Options;
 using System.Net;
 using Serilog;
+using WebDevSem2ClientMVC.Hubs;
+using WebDevSem2ClientMVC.Interfaces;
+using WebDevSem2ClientMVC.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("ApplicationDBContextConnection") ?? throw new InvalidOperationException("Connection string 'ApplicationDBContextConnection' not found.");
@@ -46,6 +49,9 @@ builder.Services.Configure<CookiePolicyOptions>(options =>
 
     options.MinimumSameSitePolicy = SameSiteMode.None;
 });
+
+
+builder.Services.AddSignalR();
 
 builder.Services.Configure<GoogleCaptchaConfig>(builder.Configuration.GetSection("GoogleReCaptcha"));
 builder.Services.AddTransient(typeof(GoogleCaptchaService));
@@ -87,6 +93,7 @@ builder.Services.Configure<IdentityOptions>(options =>
 });
 builder.Services.Configure<SecurityStampValidatorOptions>(o =>
                    o.ValidationInterval = TimeSpan.FromMinutes(1));
+builder.Services.AddScoped<IHttpClientManager, HttpClientManager>();
 
 
 
@@ -132,7 +139,9 @@ app.UseRouting();
 
 app.UseAuthorization();
 
-using(var scope = app.Services.CreateScope())
+app.MapHub<UnoHub>("/unoHub");
+
+using (var scope = app.Services.CreateScope())
 {
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 

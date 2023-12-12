@@ -1,174 +1,107 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
+using MySqlX.XDevAPI;
+using NuGet.Protocol.Core.Types;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using WebDevSem2ClientMVC.Areas.Identity.Data;
+using WebDevSem2ClientMVC.Hubs;
 using WebDevSem2ClientMVC.Models;
 
-namespace WebDevSem2API.Controllers
+[Route("api/[controller]")]
+[ApiController]
+public class GameController : ControllerBase
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class GameController : ControllerBase
+    private readonly IHubContext<UnoHub> _hubContext;
+    private readonly ApplicationDBContext _dbContext;
+
+    private static List<Player> _players = new List<Player>();
+    private static UnoGame _unoGame;
+
+    public GameController(IHubContext<UnoHub> hubContext, ApplicationDBContext dbContext)
     {
-        private readonly IUnoRepository _repository;
+        _hubContext = hubContext;
+        _dbContext = dbContext;
+    }
 
-        public GameController(IUnoRepository repository)
+    [HttpPost("joinGame")]
+    public async Task<IActionResult> JoinGame(string playerName)
+    {
+        var player = new Player { Id = HttpContext.Connection.Id };
+        _players.Add(player);
+
+        await _hubContext.Clients.All.SendAsync("PlayerJoined", playerName);
+        await UpdatePlayers();
+
+        return Ok(new { PlayerId = player.Id });
+    }
+
+
+    [HttpPost("startGame")]
+    public async Task<IActionResult> StartGame()
+    {
+        if (_players.Count < 2)
         {
-            _repository = repository;
+            return BadRequest("Cannot start the game with fewer than 2 players.");
         }
 
-        // GET: api/games
-        [HttpGet("games")]
-        public async Task<ActionResult<IEnumerable<Game>>> GamesGet()
+        _unoGame = new UnoGame(_players);
+
+        await _hubContext.Clients.All.SendAsync("GameStarted", _players.Select(p => p.Name));
+        await UpdatePlayers();
+
+        return Ok("Game started successfully");
+    }
+
+    [HttpPost("playCard")]
+    public async Task<IActionResult> PlayCard(string playerId, Card playedCard)
+    {
+        if (_unoGame == null)
         {
-            var games = await _repository.GetGames();
-            if (games == null)
-            {
-                return NotFound();
-            }
-            return Ok(games);
+            return BadRequest("The game has not started yet.");
         }
 
-        // GET: api/games/id
-        [HttpGet("games/{id}")]
-        public async Task<ActionResult<Game>> GameGet(int gameId)
+        var result = _unoGame.PlayCard(playerId, playedCard);
+
+        if (result != null)
         {
-            var game = await _repository.GetGame(gameId);
-            if (game == null)
-            {
-                return NotFound();
-            }
-            return game;
+            await _hubContext.Clients.All.SendAsync("CardPlayed", playerId, result);
+            await UpdatePlayers();
+
+            return Ok("Card played successfully");
         }
 
-        // POST: api/games
-        [HttpPost("games")]
-        //Task weghalen als het stuk gaat
-        public async Task<ActionResult> GameCreate([FromBody] Game game)
+        return BadRequest("Invalid move. The played card is not valid.");
+    }
+
+    [HttpPost("createTable")]
+    public async Task<IActionResult> CreateTable([FromBody] LobbyTable request)
+    {
+        if (!ModelState.IsValid)
         {
-            if (game == null)
-            {
-                return BadRequest();
-            }
-            await _repository.CreateGame(game);
-            return CreatedAtAction(nameof(GameGet), new { id = game.GameId }, game);
+            return BadRequest(ModelState);
         }
+        _dbContext.LobbyTable.Add(request);
+        await _dbContext.SaveChangesAsync();
 
-        // DELETE: api/games/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> GameDelete(int gameId)
-        {
-            try
-            {
-                _repository.DeleteGame(gameId);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex);
-            }
+        // Stuur een update naar clients via SignalR
+        await _hubContext.Clients.All.SendAsync("TableCreated", request.TableName);
 
-            return Ok();
-        }
-
-        // PATCH: api/games/id
-        [HttpPatch("games/{id}")]
-        public async Task<ActionResult<Card>> GameChangeCard(int gameId)
-        {
-            var game = await _repository.GetGame(gameId);
-            if (game == null)
-            {
-                return NotFound();
-            }
-            return Ok(game.Cards);
-        }
-
-        // Patch: api/games/player/5/6
-        [HttpPatch("games/player/{gameid}/{playerid}")]
-        public async Task<ActionResult> PlayerAddToGame(int gameId, string playerId)
-        {
-            if (gameId == null || playerId == null)
-            {
-                return BadRequest();
-            }
-            _repository.AddPlayer(gameId, playerId);
-            return Ok();
-        }
-
-        // Patch: api/games/player/5
-        [HttpPatch("games/player/{id}")]
-        public async Task<ActionResult> PlayerRemoveFromGame(string playerId)
-        {
-            if (playerId == null)
-            {
-                return BadRequest();
-            }
-            _repository.RemovePlayer(playerId);
-            return Ok();
-        }
+        return Ok("Table created successfully");
+    }
 
 
-        // GET: api/games/id
-        [HttpGet("games/player/hand/{id}")]
-        public async Task<ActionResult<Game>> PlayerGetHand(string playerId)
-        {
-            if (playerId == null)
-            {
-                return BadRequest();
-            }
-            var playerHand = await _repository.GetPlayerHand(playerId);
-            if (playerHand == null)
-            {
-                return NotFound();
-            }
-            return Ok(playerHand);
-        }
+    [HttpGet("getTables")]
+    public IActionResult GetTables()
+    {
+        var tables = _dbContext.LobbyTable.ToList();
+        return Ok(tables);
+    }
 
-        // PATCH: api/games/id
-        [HttpPatch("games/player/hand/{playerid}/{cardid}")]
-        public async Task<ActionResult<Game>> PlayerPlayCard(string playerId, int cardId)
-        {
-            if (playerId == null)
-            {
-                return BadRequest();
-            }
-            var game = await _repository.GetGame(playerId);
-            if (game == null)
-            {
-                return NotFound();
-            }
-            var card = await _repository.GetCard(cardId);
-            if (card == null)
-            {
-                return NotFound();
-            }
-
-            if (game.CurrentCard == card)
-            {
-                game.CurrentCard = card;
-                _repository.RemoveCard(playerId, cardId);
-            }
-            else
-            {
-                return BadRequest("Deze kaart mag niet gespeeld worden");
-            }
-
-            return Ok();
-        }
-
-        // GET: api/games/hand/card
-        [HttpGet("games/player/hand/card")]
-        public async Task<ActionResult<IEnumerable<Card>>> PlayerGetCard(string playerId)
-        {
-            if (playerId == null)
-            {
-                return BadRequest();
-            }
-            var randomCard = await _repository.GetRandomCard(playerId);
-            if (randomCard == null)
-            {
-                return NotFound("No random card found");
-            }
-            _repository.AddCardHand(randomCard, playerId);
-            return Ok(_repository.GetPlayerHand);
-        }
-
+    private async Task UpdatePlayers()
+    {
+        await _hubContext.Clients.All.SendAsync("UpdatePlayers", _players);
     }
 }

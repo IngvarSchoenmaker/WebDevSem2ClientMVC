@@ -59,7 +59,6 @@ namespace WebDevSem2ClientMVC.Controllers
             {
                 return NotFound();
             }
-            var test = userView.User.Game;
             if (ModelState.IsValid)
             {
                 try

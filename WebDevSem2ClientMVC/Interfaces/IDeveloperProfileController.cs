@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebDevSem2ClientMVC.Models;
 
-namespace WebDevSem2ClientMVC.Controllers
+namespace WebDevSem2ClientMVC.Interfaces
 {
     public interface IDeveloperProfileController
     {

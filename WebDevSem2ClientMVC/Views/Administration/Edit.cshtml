@@ -11,7 +11,7 @@
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="User.Id" />
-            <input type="hidden" asp-for="User.Game" />
+            @*<input type="hidden" asp-for="User.Game" />*@
             <div class="form-group">
                 <label asp-for="User.UserName" class="control-label"></label>
                 <input asp-for="User.UserName" class="form-control" />
