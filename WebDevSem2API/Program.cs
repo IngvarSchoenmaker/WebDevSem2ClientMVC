@@ -1,15 +1,11 @@
 using Microsoft.EntityFrameworkCore;
-using WebDevSem2API.Controllers;
 using WebDevSem2ClientMVC.Areas.Identity.Data;
-using WebDevSem2ClientMVC.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllers();
-
-builder.Services.AddSignalR();
 
 var connectionString = builder.Configuration.GetConnectionString("ApplicationDBContextConnection") ?? throw new InvalidOperationException("Connection string 'ApplicationDBContextConnection' not found.");
 
@@ -34,7 +30,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.MapHub<UnoHub>("/unoHub");
 
 app.UseHttpsRedirection();
 

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebDevSem2ClientMVC.Areas.Identity.Data;
 
@@ -11,9 +12,11 @@ using WebDevSem2ClientMVC.Areas.Identity.Data;
 namespace WebDevSem2ClientMVC.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20231221101541_ConnectedApplicationuserToPlayer")]
+    partial class ConnectedApplicationuserToPlayer
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -278,7 +281,7 @@ namespace WebDevSem2ClientMVC.Migrations
                     b.Property<int>("Number")
                         .HasColumnType("int");
 
-                    b.Property<int?>("PlayerId")
+                    b.Property<int?>("Playerid")
                         .HasColumnType("int");
 
                     b.Property<int>("Type")
@@ -286,7 +289,7 @@ namespace WebDevSem2ClientMVC.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PlayerId");
+                    b.HasIndex("Playerid");
 
                     b.ToTable("Card");
                 });
@@ -393,18 +396,23 @@ namespace WebDevSem2ClientMVC.Migrations
 
             modelBuilder.Entity("WebDevSem2ClientMVC.Models.Player", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
 
                     b.Property<int?>("GameId")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("id");
 
                     b.HasIndex("GameId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Player");
                 });
@@ -510,7 +518,7 @@ namespace WebDevSem2ClientMVC.Migrations
                 {
                     b.HasOne("WebDevSem2ClientMVC.Models.Player", null)
                         .WithMany("HandCards")
-                        .HasForeignKey("PlayerId");
+                        .HasForeignKey("Playerid");
                 });
 
             modelBuilder.Entity("WebDevSem2ClientMVC.Models.LobbyTable", b =>
@@ -528,7 +536,13 @@ namespace WebDevSem2ClientMVC.Migrations
                         .WithMany("Players")
                         .HasForeignKey("GameId");
 
+                    b.HasOne("WebDevSem2ClientMVC.Areas.Identity.Data.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
                     b.Navigation("Game");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("WebDevSem2ClientMVC.Models.Player", b =>

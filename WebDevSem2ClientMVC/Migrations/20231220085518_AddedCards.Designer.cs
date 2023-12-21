@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebDevSem2ClientMVC.Areas.Identity.Data;
 
@@ -11,9 +12,11 @@ using WebDevSem2ClientMVC.Areas.Identity.Data;
 namespace WebDevSem2ClientMVC.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20231220085518_AddedCards")]
+    partial class AddedCards
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -201,6 +204,10 @@ namespace WebDevSem2ClientMVC.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Email")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
@@ -262,6 +269,10 @@ namespace WebDevSem2ClientMVC.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("ApplicationUser");
+
+                    b.UseTphMappingStrategy();
                 });
 
             modelBuilder.Entity("WebDevSem2ClientMVC.Models.Card", b =>
@@ -278,8 +289,8 @@ namespace WebDevSem2ClientMVC.Migrations
                     b.Property<int>("Number")
                         .HasColumnType("int");
 
-                    b.Property<int?>("PlayerId")
-                        .HasColumnType("int");
+                    b.Property<string>("PlayerId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("Type")
                         .HasColumnType("int");
@@ -373,9 +384,6 @@ namespace WebDevSem2ClientMVC.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TableId"));
 
-                    b.Property<int?>("GameId")
-                        .HasColumnType("int");
-
                     b.Property<int>("NumberOfPlayers")
                         .HasColumnType("int");
 
@@ -386,27 +394,7 @@ namespace WebDevSem2ClientMVC.Migrations
 
                     b.HasKey("TableId");
 
-                    b.HasIndex("GameId");
-
                     b.ToTable("LobbyTable");
-                });
-
-            modelBuilder.Entity("WebDevSem2ClientMVC.Models.Player", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int?>("GameId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("GameId");
-
-                    b.ToTable("Player");
                 });
 
             modelBuilder.Entity("WebDevSem2ClientMVC.Models.UnoGame", b =>
@@ -417,12 +405,33 @@ namespace WebDevSem2ClientMVC.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("CurrentPlayerId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<int>("GameStatus")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CurrentPlayerId");
+
                     b.ToTable("UnoGame");
+                });
+
+            modelBuilder.Entity("WebDevSem2ClientMVC.Models.Player", b =>
+                {
+                    b.HasBaseType("WebDevSem2ClientMVC.Areas.Identity.Data.ApplicationUser");
+
+                    b.Property<int?>("GameId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasIndex("GameId");
+
+                    b.HasDiscriminator().HasValue("Player");
                 });
 
             modelBuilder.Entity("CardUnoGame", b =>
@@ -513,13 +522,15 @@ namespace WebDevSem2ClientMVC.Migrations
                         .HasForeignKey("PlayerId");
                 });
 
-            modelBuilder.Entity("WebDevSem2ClientMVC.Models.LobbyTable", b =>
+            modelBuilder.Entity("WebDevSem2ClientMVC.Models.UnoGame", b =>
                 {
-                    b.HasOne("WebDevSem2ClientMVC.Models.UnoGame", "Game")
+                    b.HasOne("WebDevSem2ClientMVC.Models.Player", "CurrentPlayer")
                         .WithMany()
-                        .HasForeignKey("GameId");
+                        .HasForeignKey("CurrentPlayerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Navigation("Game");
+                    b.Navigation("CurrentPlayer");
                 });
 
             modelBuilder.Entity("WebDevSem2ClientMVC.Models.Player", b =>
@@ -531,14 +542,14 @@ namespace WebDevSem2ClientMVC.Migrations
                     b.Navigation("Game");
                 });
 
-            modelBuilder.Entity("WebDevSem2ClientMVC.Models.Player", b =>
-                {
-                    b.Navigation("HandCards");
-                });
-
             modelBuilder.Entity("WebDevSem2ClientMVC.Models.UnoGame", b =>
                 {
                     b.Navigation("Players");
+                });
+
+            modelBuilder.Entity("WebDevSem2ClientMVC.Models.Player", b =>
+                {
+                    b.Navigation("HandCards");
                 });
 #pragma warning restore 612, 618
         }

@@ -30,9 +30,16 @@ namespace WebDevSem2ClientMVC.Services
                 return await httpClient.PostAsync(uri, content);
             }
         }
+        public async Task<HttpResponseMessage> PutAsync(string uri)
+        {
+            using (var httpClient = CreateClient())
+            {
+                return await httpClient.PutAsync(uri, null);
+            }
+        }
         private void InitializeHttpClient(HttpClient httpClient)
         {
-            httpClient.BaseAddress = new Uri("https://localhost:44384/api/game/");
+            httpClient.BaseAddress = new Uri("https://localhost:44384/api/game/"); // Todo: move to config
             httpClient.DefaultRequestHeaders.Accept.Clear();
             httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }

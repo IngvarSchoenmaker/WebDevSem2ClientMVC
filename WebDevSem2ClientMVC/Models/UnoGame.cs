@@ -1,19 +1,53 @@
-﻿namespace WebDevSem2ClientMVC.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace WebDevSem2ClientMVC.Models
 {
+    public enum GameStatus
+    {
+        WaitingForPlayers,
+        InProgress,
+        Ended
+    }
     public class UnoGame
     {
-        private List<Player> _players;
-        private List<Card> _deck;
-        private List<Card> _discardPile;
-        private Player _currentPlayer;
+        public int Id { get; set; }
+        public GameStatus GameStatus { get; set; }
+        public List<Player> Players { get; set; } = new List<Player>();
+        [NotMapped]
+        public Player? CurrentPlayer { get; set; }
 
-        public UnoGame(List<Player> players)
+        public List<Card>? Deck { get; set; }
+        public List<Card>? DiscardPile { get; set; }
+
+        public UnoGame() 
         {
-            _players = players;
-            _deck = InitializeDeck();
+            GameStatus = GameStatus.WaitingForPlayers;
+            Deck = InitializeDeck();
             ShuffleDeck();
-            _discardPile = new List<Card> { DrawCard() }; // Eerste kaart op de aflegstapel
-            _currentPlayer = _players.First(); // Start met de eerste speler
+            DiscardPile = new List<Card> { DrawCard() }; // Eerste kaart op de aflegstapel
+        }
+        public UnoGame(Player players)
+        {
+            GameStatus = GameStatus.WaitingForPlayers;
+            JoinGame(players);
+            Deck = InitializeDeck();
+            ShuffleDeck();
+            DiscardPile = new List<Card> { DrawCard() }; // Eerste kaart op de aflegstapel
+            CurrentPlayer = Players.First(); // Start met de eerste speler
+        }
+        public List<Card> GetStartingHand()
+        {
+            List<Card> hand = new List<Card>();
+            int startingAmount = 7;
+            for (int i = 0; i < startingAmount; i++)
+            {
+                hand.Add(DrawCard());
+            }
+            return hand;
+        }
+        public void JoinGame(Player player)
+        {
+            Players.Add(player);
         }
 
         private List<Card> InitializeDeck()
@@ -42,13 +76,13 @@
 
         private void ShuffleDeck()
         {
-            _deck = _deck.OrderBy(card => Guid.NewGuid()).ToList();
+            Deck = Deck.OrderBy(card => Guid.NewGuid()).ToList();
         }
 
         private Card DrawCard()
         {
-            var card = _deck.First();
-            _deck.Remove(card);
+            var card = Deck.First();
+            Deck.Remove(card);
             return card;
         }
 
@@ -58,7 +92,7 @@
             if (IsValidMove(playedCard))
             {
                 // Voeg de gespeelde kaart toe aan de aflegstapel
-                _discardPile.Add(playedCard);
+                DiscardPile.Add(playedCard);
 
                 // Wijzig de huidige speler (bijv. naar de volgende speler in de lijst)
                 ChangeCurrentPlayer();
@@ -75,7 +109,7 @@
             // Implementeer de logica om te controleren of de gespeelde kaart een geldige zet is
             // Dit is een eenvoudig voorbeeld; je moet dit aanpassen aan de regels van Uno
 
-            var topCard = _discardPile.Last();
+            var topCard = DiscardPile.Last();
 
             return playedCard.Color == topCard.Color || playedCard.Number == topCard.Number || playedCard.Type == CardType.Wild;
         }
@@ -84,9 +118,29 @@
         {
             // Implementeer de logica om de huidige speler te wijzigen, bijv. naar de volgende speler in de lijst
             // Dit is een eenvoudig voorbeeld; je moet dit aanpassen aan de regels van Uno
-            var currentPlayerIndex = _players.IndexOf(_currentPlayer);
-            var nextPlayerIndex = (currentPlayerIndex + 1) % _players.Count;
-            _currentPlayer = _players[nextPlayerIndex];
+            var currentPlayerIndex = Players.IndexOf(CurrentPlayer);
+            var nextPlayerIndex = (currentPlayerIndex + 1) % Players.Count;
+            CurrentPlayer = Players[nextPlayerIndex];
+        }
+        public void ChangeGameStatus()
+        {
+            // Andere logica blijft ongewijzigd
+
+            // Voorbeeld: Zet de status op 'InProgress' als het spel begint
+            if (GameStatus == GameStatus.WaitingForPlayers && Players.Count >= 2)
+            {
+                GameStatus = GameStatus.InProgress;
+            }
+
+            // Voorbeeld: Zet de status op 'Ended' als het spel eindigt
+            if (GameStatus == GameStatus.InProgress && IsGameOver())
+            {
+                GameStatus = GameStatus.Ended;
+            }
+        }
+        private bool IsGameOver()
+        {
+            return Players.Any(player => player.HandCards.Count == 0);
         }
     }
 

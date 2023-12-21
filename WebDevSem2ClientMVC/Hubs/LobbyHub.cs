@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.SignalR;
+﻿using Microsoft.AspNet.SignalR.Hubs;
+using Microsoft.AspNetCore.SignalR;
+using WebDevSem2ClientMVC.Models;
 
 namespace WebDevSem2ClientMVC.Hubs
 {
-    public class UnoHub : Hub
+    public class LobbyHub : Hub
     {
         public async Task PlayerJoined(string playerName)
         {
@@ -18,9 +20,10 @@ namespace WebDevSem2ClientMVC.Hubs
         {
             await Clients.All.SendAsync("CardPlayed", playerId, card);
         }
-        public async Task NewTableCreated(string tableName)
+        public async Task SendTableCreatedUpdate(LobbyTable newTable)
         {
-            await Clients.All.SendAsync("TableCreated", tableName);
+            // Stuur de nieuwe tafel naar alle clients
+            await Clients.All.SendAsync("TableCreated", newTable);
         }
     }
 }

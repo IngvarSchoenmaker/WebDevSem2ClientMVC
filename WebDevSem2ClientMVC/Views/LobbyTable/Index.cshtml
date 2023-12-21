@@ -9,15 +9,20 @@
 
 <h2>Lobby</h2>
 
-<ul>
+<ul id="tableList">
     @foreach (var table in Model)
     {
         <li>
-            <a href="@Url.Action("JoinTable", "Game", new { tableId = table.TableId })">
+            @*<a href="@Url.Action("JoinTable", "Game", new { tableId = table.TableId })">
+                Tafel: @table.TableName - Max aantal spelers: @table.NumberOfPlayers
+            </a>*@
+            <a asp-controller="LobbyTable" asp-action="JoinTable" asp-route-tableId="@table.TableId">
                 Tafel: @table.TableName - Max aantal spelers: @table.NumberOfPlayers
             </a>
         </li>
     }
+
+    <li id="newTablePlaceholder" style="display: none;"></li>
 </ul>
 
 

@@ -1,10 +1,12 @@
-﻿using WebDevSem2ClientMVC.Areas.Identity.Data;
+﻿using Microsoft.AspNetCore.Identity;
+using WebDevSem2ClientMVC.Areas.Identity.Data;
 
 namespace WebDevSem2ClientMVC.Models
 {
-    public class Player : ApplicationUser
+    public class Player
     {
-        public string Name { get; set; }
-        public List<Card> HandCards { get; set; }
+        public int Id { get; set; }
+        public List<Card>? HandCards { get; set; }
+        public UnoGame? Game { get; set; }
     }
 }

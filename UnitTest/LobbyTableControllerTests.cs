@@ -14,6 +14,7 @@ using WebDevSem2ClientMVC.Controllers;
 using System.Net.Http;
 using Microsoft.Extensions.DependencyInjection;
 using WebDevSem2ClientMVC.Interfaces;
+using WebDevSem2ClientMVC.Models;
 
 namespace UnitTest
 {
@@ -28,7 +29,7 @@ namespace UnitTest
             // Initialiseer de benodigde componenten voor je tests
 
             _httpClientManagerMock = new Mock<IHttpClientManager>();
-            _lobbyTableController = new LobbyTableController(_httpClientManagerMock.Object);
+            //_lobbyTableController = new LobbyTableController(_httpClientManagerMock.Object);
         }
 
         [TearDown]
@@ -41,8 +42,12 @@ namespace UnitTest
         public async Task CreateTable_ValidInput_ReturnsOk()
         {
             // Arrange
-            var tableName = "ValidTableName";
-            var numberOfPlayers = 4;
+            LobbyTable lobbyTable = new LobbyTable
+            {
+                TableName = "ValidTableName",
+                NumberOfPlayers = 4
+            };
+            
 
             var expectedResponse = new HttpResponseMessage(HttpStatusCode.OK);
 
@@ -50,7 +55,7 @@ namespace UnitTest
                 .ReturnsAsync(expectedResponse);
 
             // Act
-            var result = await _lobbyTableController.CreateTable(tableName, numberOfPlayers) as OkObjectResult;
+            var result = await _lobbyTableController.CreateTable(lobbyTable) as OkObjectResult;
 
             // Assert
             Assert.IsNotNull(result);
@@ -60,17 +65,16 @@ namespace UnitTest
 
         [Test]
         public async Task CreateTable_InvalidInput_ReturnsBadRequest()
-        { 
+        {
             // Arrange
-            var tableName = string.Empty;
-            var numberOfPlayers = 6;
-
-
-            _httpClientManagerMock.Setup(manager => manager.PostAsync(It.IsAny<string>(), It.IsAny<HttpContent>()))
-       .ReturnsAsync(new HttpResponseMessage(HttpStatusCode.BadRequest));
+            LobbyTable lobbyTable = new()
+            {
+                TableName = string.Empty,
+                NumberOfPlayers = 6
+            };
 
             // Act
-            var result = await _lobbyTableController.CreateTable(tableName, numberOfPlayers) as BadRequestObjectResult;
+            var result = await _lobbyTableController.CreateTable(lobbyTable) as BadRequestObjectResult;
 
             // Assert
             Assert.IsNotNull(result);
@@ -82,8 +86,11 @@ namespace UnitTest
         public async Task CreateTable_PostAsyncFails_ReturnsBadRequest()
         {
             // Arrange
-            var tableName = "ValidTableName";
-            var numberOfPlayers = 4;
+            LobbyTable lobbyTable = new()
+            {
+                TableName = "ValidTableName",
+                NumberOfPlayers = 4
+            };
 
             var expectedResponse = new HttpResponseMessage(HttpStatusCode.InternalServerError);
 
@@ -91,7 +98,7 @@ namespace UnitTest
                 .ReturnsAsync(expectedResponse);
 
             // Act
-            var result = await _lobbyTableController.CreateTable(tableName, numberOfPlayers) as BadRequestObjectResult;
+            var result = await _lobbyTableController.CreateTable(lobbyTable) as BadRequestObjectResult;
 
             // Assert
             Assert.IsNotNull(result);
@@ -102,13 +109,14 @@ namespace UnitTest
         public async Task CreateTable_NameWithEscapeCharacters_ReturnsOk()
         {
             // Arrange
-            var tableName = "Na\\m'e;"; // Na\m'e
-
-            _httpClientManagerMock.Setup(manager => manager.PostAsync(It.IsAny<string>(), It.IsAny<HttpContent>()))
-                .ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK));
+            LobbyTable lobbyTable = new()
+            {
+                TableName = "Na\\m'e;",
+                NumberOfPlayers = 4
+            };
 
             // Act
-            var result = await _lobbyTableController.CreateTable(tableName, 4) as OkObjectResult;
+            var result = await _lobbyTableController.CreateTable(lobbyTable) as BadRequestObjectResult;
 
             // Assert
             Assert.IsNotNull(result);

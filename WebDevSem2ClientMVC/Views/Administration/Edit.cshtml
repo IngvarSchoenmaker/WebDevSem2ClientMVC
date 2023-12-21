@@ -28,11 +28,6 @@
                 <span asp-validation-for="User.LastName" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="User.GameId" class="control-label"></label>
-                <input asp-for="User.GameId" class="form-control" />
-                <span asp-validation-for="User.GameId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
                 @foreach (var Rol in Model.Roles)
                 {
                     @if (Model.Claims.Contains(Rol))

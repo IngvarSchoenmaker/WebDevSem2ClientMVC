@@ -3,8 +3,9 @@
     public interface IHttpClientManager
     {
         HttpClient CreateClient();
-        Task<HttpResponseMessage> GetAsync(string v);
+        Task<HttpResponseMessage> GetAsync(string uri);
         Task<HttpResponseMessage> PostAsync(string uri, HttpContent content);
+        Task<HttpResponseMessage> PutAsync(string uri);
 
     }
 }

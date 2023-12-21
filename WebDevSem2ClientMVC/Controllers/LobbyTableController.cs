@@ -1,20 +1,24 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.SignalR;
+﻿using Microsoft.AspNetCore.SignalR;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System.Net.Http.Headers;
 using System.Text;
+using WebDevSem2ClientMVC.Hubs;
 using WebDevSem2ClientMVC.Interfaces;
 using WebDevSem2ClientMVC.Models;
+using System.Net.Http.Json;
 
 namespace WebDevSem2ClientMVC.Controllers
 {
     public class LobbyTableController : Controller
     {
         private readonly IHttpClientManager _httpClientManager;
+        private readonly IHubContext<LobbyHub> _hubContext;
 
-        public LobbyTableController(IHttpClientManager httpClientManager)
+        public LobbyTableController(IHubContext<LobbyHub> hubContext, IHttpClientManager httpClientManager)
         {
+            _hubContext = hubContext;
             _httpClientManager = httpClientManager;
         }
         public async Task<IActionResult> Index()
@@ -23,7 +27,30 @@ namespace WebDevSem2ClientMVC.Controllers
             var availableTables = await GetAvailableTables();
             return View(availableTables);
         }
+        //[HttpPost]
+        public async Task<IActionResult> JoinTable(int tableId)
+        {
+            // Voeg logica toe om de speler aan de tafel toe te voegen
+            var response = await _httpClientManager.PostAsync($"joinTable/{tableId}/", null);
 
+            if (response.IsSuccessStatusCode)
+            {
+                await _hubContext.Clients.All.SendAsync("PlayerJoinedTable", tableId);
+                await UpdateTableList(); // Update de lijst met tafels voor andere clients
+                var jsonContent = await response.Content.ReadAsStringAsync();
+                TempData["TableId"] = tableId;
+                TempData["PlayerId"] = int.TryParse(jsonContent, out int number);
+                return RedirectToAction("Index", "Game");
+            }
+
+            return BadRequest("Unable to join the table");
+        }
+
+        private async Task UpdateTableList()
+        {
+            var availableTables = await GetAvailableTables();
+            await _hubContext.Clients.All.SendAsync("UpdateTableList", availableTables);
+        }
         public async Task<List<LobbyTable>>? GetAvailableTables()
         {
 
@@ -44,7 +71,6 @@ namespace WebDevSem2ClientMVC.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateTable(LobbyTable model)
         {
-            // check if table name is not empty
             if (!ModelState.IsValid)
             {
                 // Als het een AJAX-aanvraag is, retourneer JSON met foutmeldingen
@@ -61,10 +87,13 @@ namespace WebDevSem2ClientMVC.Controllers
             var jsonContent = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
 
             HttpResponseMessage response = await _httpClientManager.PostAsync("createTable", jsonContent);
-
+            string theId = await response.Content.ReadAsStringAsync();
+            model.TableId = Int32.Parse(theId);
             if (response.IsSuccessStatusCode)
             {
-                return Ok("Table created successfully");
+                //await _hubContext.Clients.All.SendAsync("TableCreated", model);
+
+                return new RedirectResult(url: "/LobbyTable/Index", permanent: true, preserveMethod: true);
             }
             return BadRequest($"Invalid input or connection problem");
         }

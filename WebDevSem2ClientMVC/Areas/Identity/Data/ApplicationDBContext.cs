@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection.Emit;
 using WebDevSem2ClientMVC.Models;
 
 namespace WebDevSem2ClientMVC.Areas.Identity.Data;
@@ -13,10 +14,24 @@ public class ApplicationDBContext : IdentityDbContext<ApplicationUser>
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
-        base.OnModelCreating(builder);
         // Customize the ASP.NET Identity model and override the defaults if needed.
         // For example, you can rename the ASP.NET Identity table names and more.
         // Add your customizations after calling base.OnModelCreating(builder);
+
+        // Configuratie van UnoGame-Deck relatie (veel-op-veel)
+        builder.Entity<UnoGame>()
+            .HasMany(g => g.Deck)
+            .WithMany()
+            .UsingEntity(j => j.ToTable("UnoGameDeck"));
+
+        // Configuratie van UnoGame-DiscardPile relatie (veel-op-veel)
+        builder.Entity<UnoGame>()
+            .HasMany(g => g.DiscardPile)
+            .WithMany()
+            .UsingEntity(j => j.ToTable("UnoGameDiscardPile"));
+
+        base.OnModelCreating(builder);
+
         Seed(builder);
         builder.ApplyConfiguration(new ApplicationUserEntityConfiguration());
     }
@@ -37,6 +52,8 @@ public class ApplicationDBContext : IdentityDbContext<ApplicationUser>
 
     public virtual DbSet<DeveloperProfile> DeveloperProfile { get; set; } = default!;
     public virtual DbSet<ContactForm> ContactForm { get; set; } = default!;
-    public virtual DbSet<ApplicationUser> Player { get; set; } = default!;
+    public virtual DbSet<Player> Player { get; set; } = default!;
     public virtual DbSet<LobbyTable> LobbyTable { get; set; } = default!;
+    public virtual DbSet<UnoGame> UnoGame { get; set; } = default!;
+    public virtual DbSet<Card> Card { get; set; } = default!;
 }

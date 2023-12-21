@@ -1,0 +1,23 @@
+﻿<!-- Views/LobbyTable/Index.cshtml -->
+@model UnoGame
+
+<!-- Toon de huidige spelstatus -->
+<h2>Uno Game Status</h2>
+<p>Discard Pile Top Card: @Model.DiscardPile.Last()</p>
+
+<!-- Voeg knoppen toe om acties uit te voeren -->
+<button onclick="startGame()">Start Game</button>
+<button onclick="playCard('playerId', 'playedCard')">Play Card</button>
+
+<!-- JavaScript om de knopacties uit te voeren -->
+<script>
+    function startGame() {
+        // Implementeer logica om de Start Game-knopactie af te handelen
+        // Maak een AJAX-aanroep naar de StartGame-actie in de LobbyTableController
+    }
+
+    function playCard(playerId, playedCard) {
+        // Implementeer logica om de Play Card-knopactie af te handelen
+        // Maak een AJAX-aanroep naar de PlayCard-actie in de LobbyTableController
+    }
+</script>

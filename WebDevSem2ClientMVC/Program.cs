@@ -139,7 +139,7 @@ app.UseRouting();
 
 app.UseAuthorization();
 
-app.MapHub<UnoHub>("/unoHub");
+app.MapHub<LobbyHub>("/lobbyHub");
 
 using (var scope = app.Services.CreateScope())
 {

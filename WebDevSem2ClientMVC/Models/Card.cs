@@ -2,6 +2,7 @@
 {
     public class Card
     {
+        public int Id { get; set; } // Een uniek ID voor de kaart
         public int Number { get; set; } // Het nummer op de kaart (0-9)
         public CardColor Color { get; set; } // De kleur van de kaart
         public CardType Type { get; set; } // Het type kaart (bijv. normaal, omkeren, overslaan, etc.)
