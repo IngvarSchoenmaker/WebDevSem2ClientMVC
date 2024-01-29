@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using SendGrid.Helpers.Mail;
 using WebDevSem2ClientMVC.Areas.Identity.Data;
 using WebDevSem2ClientMVC.Hubs;
-using WebDevSem2ClientMVC.Migrations;
 using WebDevSem2ClientMVC.Models;
 
 [Route("api/[controller]")]
@@ -26,11 +25,19 @@ public class GameController : ControllerBase
         {
             return BadRequest(ModelState);
         }
-        UnoGame? unoGame = new UnoGame();
+        UnoGame unoGame = new UnoGame();
         request.Game = unoGame;
         var data = _dbContext.LobbyTable.Add(request);
 
-        await _dbContext.SaveChangesAsync();
+        try
+        {
+            await _dbContext.SaveChangesAsync();
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+        //await _dbContext.SaveChangesAsync();
 
         request.TableId = data.Entity.TableId;
 
@@ -39,42 +46,40 @@ public class GameController : ControllerBase
     }
     [HttpPost("joinTable/{tableId}")]
     public async Task<IActionResult> JoinTable(int tableId)
-    {        
+    {
         Player? player = new Player();
         var data = await _dbContext.Player.AddAsync(player);
         await _dbContext.SaveChangesAsync();
-        player.Id = data.Entity.Id;
+        player.PlayerId = data.Entity.PlayerId;
         //Find table by id
-        LobbyTable? LobbyTable = _dbContext.LobbyTable.Find(tableId);
+        LobbyTable? lobbyTable = await _dbContext.LobbyTable.Include(g => g.Game).FirstOrDefaultAsync(g => g.TableId == tableId);
         //Check if found
-        if (LobbyTable == null)
+        if (lobbyTable == null)
         {
             return BadRequest("Table id not found.");
         }
-        UnoGame? unogame = LobbyTable.Game; // TODO: check get uno game?
+        UnoGame? unogame = lobbyTable.Game; // TODO: check get uno game?
         //Check if table got game
         if (unogame == null)
         {
             //create game if not
             unogame = new UnoGame(player);
-            LobbyTable.Game = unogame;
+            await _dbContext.UnoGame.AddAsync(unogame);
+            lobbyTable.Game = unogame;
+            //_dbContext.Entry(lobbyTable).State = EntityState.Modified;
         }
         else
         {
             //join game if yes
             unogame.JoinGame(player);
+            //_dbContext.Entry(unogame).State = EntityState.Modified;
+
         }
+        await _dbContext.SaveChangesAsync();
 
-        if (unogame != null)
-        {
-            var databaseGame = await _dbContext.UnoGame.AddAsync(unogame);
-            await _dbContext.SaveChangesAsync();
-            player.Game = databaseGame.Entity;
+        return Ok(player.PlayerId);
 
-            return Ok(player.Id);
-        }
-
-        return BadRequest("Invalid move. The played card is not valid.");
+        //return BadRequest("Invalid move. The played card is not valid.");
     }
     [HttpPut("startGame")]
     public async Task<IActionResult> StartGame(int gameId)
@@ -149,9 +154,10 @@ public class GameController : ControllerBase
         return NotFound("Game or player not found.");
     }
     // Find the game by id
-    private UnoGame? GetUnoGame(int gameId)
+    private UnoGame? GetUnoGame(int tableId)
     {
-        return _dbContext.UnoGame.Find(gameId);
+        int gameId = _dbContext.LobbyTable.Where(x => x.TableId == tableId).Select(x => x.Game.UnoId).First();
+        return _dbContext.UnoGame.Include(x => x.DiscardPile).Where(x => x.UnoId == gameId).Include(x => x.Players).First();
     }
 
 

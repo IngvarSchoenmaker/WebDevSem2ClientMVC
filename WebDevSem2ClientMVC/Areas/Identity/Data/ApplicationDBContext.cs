@@ -18,6 +18,14 @@ public class ApplicationDBContext : IdentityDbContext<ApplicationUser>
         // For example, you can rename the ASP.NET Identity table names and more.
         // Add your customizations after calling base.OnModelCreating(builder);
 
+        // Configureer de relatie tussen LobbyTable en UnoGame
+        //builder.Entity<LobbyTable>()
+        //    .HasOne(l => l.Game)
+        //    .WithOne()
+        //    .HasForeignKey<LobbyTable>(l => l.Game.Id)
+        //    .IsRequired(false); // Als je wilt dat de relatie optioneel is
+
+
         // Configuratie van UnoGame-Deck relatie (veel-op-veel)
         builder.Entity<UnoGame>()
             .HasMany(g => g.Deck)

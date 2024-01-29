@@ -5,8 +5,8 @@ namespace WebDevSem2ClientMVC.Models
 {
     public class Player
     {
-        public int Id { get; set; }
+        public int PlayerId { get; set; }
         public List<Card>? HandCards { get; set; }
-        public UnoGame? Game { get; set; }
+        //public UnoGame? Game { get; set; }
     }
 }

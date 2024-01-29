@@ -11,11 +11,11 @@ using System.Text;
 
 namespace WebDevSem2ClientMVC.Controllers
 {
-    public class GameController : Controller
+    public class GameController : Controller, IGameController
     {
         //check of dit nodig is of dat het uit player gehaald kan worden
         private int _gameId;
-        private string _playerId;
+        private int _playerId;
         private List<Card> _playerHand;
 
         private UnoGame _unoGame;
@@ -28,11 +28,18 @@ namespace WebDevSem2ClientMVC.Controllers
             _hubContext = hubContext;
             _httpClientManager = httpClientManager;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index(int tableId, int playerId)
         {
-            var _gameId = TempData["TableId"] as int?;
-            var _playerId = TempData["PlayerId"] as int?;
-            return View(_unoGame);
+            _gameId = tableId;
+            _playerId = playerId;
+            HttpResponseMessage response = await _httpClientManager.GetAsync($"getGameState/{_gameId}");
+            if (response.IsSuccessStatusCode)
+            {
+                _unoGame = JsonConvert.DeserializeObject<UnoGame>(response.Content.ReadAsStringAsync().Result);
+                _unoGame.You = _unoGame.Players.Find(player => player.PlayerId == _playerId);
+                return View(_unoGame);
+            }
+            return BadRequest("Unable to join the table");
         }
 
         public async Task<IActionResult> StartGame(int TableId)
@@ -81,7 +88,7 @@ namespace WebDevSem2ClientMVC.Controllers
             HttpResponseMessage response = await _httpClientManager.GetAsync($"PlayCard/{TableId}");
             if (response.IsSuccessStatusCode)
             {
-                
+
             }
 
             // Update dan de _unoGame met de ontvangen status

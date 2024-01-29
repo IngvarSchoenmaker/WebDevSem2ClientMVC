@@ -4,6 +4,19 @@
 <!-- Toon de huidige spelstatus -->
 <h2>Uno Game Status</h2>
 <p>Discard Pile Top Card: @Model.DiscardPile.Last()</p>
+<p>Amount of players: </p><p id="playerCount">@Model.Players.Count</p>
+<p>Current Player: @Model.CurrentPlayer</p>
+
+@* deze moet nog komen *@
+<p>Player id: </p> <p id="playerId">@Model.You.PlayerId</p>
+<ul id="playerList">
+@foreach (var player in Model.Players)
+    {
+        <li>@player.PlayerId</li>
+    }
+    <li id="newPlayerPlaceholder" style="display: none;"></li>
+
+</ul>
 
 <!-- Voeg knoppen toe om acties uit te voeren -->
 <button onclick="startGame()">Start Game</button>

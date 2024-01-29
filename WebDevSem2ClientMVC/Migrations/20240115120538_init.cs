@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace WebDevSem2ClientMVC.Migrations
 {
     /// <inheritdoc />
-    public partial class tet : Migration
+    public partial class init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -50,6 +50,52 @@ namespace WebDevSem2ClientMVC.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ContactForm",
+                columns: table => new
+                {
+                    ContactFormId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    DeveloperProfileId = table.Column<int>(type: "int", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Subject = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    Message = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ContactForm", x => x.ContactFormId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "DeveloperProfile",
+                columns: table => new
+                {
+                    DeveloperProfileId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Skills = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Discription = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PictureURL = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DeveloperProfile", x => x.DeveloperProfileId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UnoGame",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    GameStatus = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UnoGame", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -158,6 +204,118 @@ namespace WebDevSem2ClientMVC.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "LobbyTable",
+                columns: table => new
+                {
+                    TableId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    TableName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    NumberOfPlayers = table.Column<int>(type: "int", nullable: false),
+                    GameId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_LobbyTable", x => x.TableId);
+                    table.ForeignKey(
+                        name: "FK_LobbyTable_UnoGame_GameId",
+                        column: x => x.GameId,
+                        principalTable: "UnoGame",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Player",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    GameId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Player", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Player_UnoGame_GameId",
+                        column: x => x.GameId,
+                        principalTable: "UnoGame",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Card",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Number = table.Column<int>(type: "int", nullable: false),
+                    Color = table.Column<int>(type: "int", nullable: false),
+                    Type = table.Column<int>(type: "int", nullable: false),
+                    PlayerId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Card", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Card_Player_PlayerId",
+                        column: x => x.PlayerId,
+                        principalTable: "Player",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UnoGameDeck",
+                columns: table => new
+                {
+                    DeckId = table.Column<int>(type: "int", nullable: false),
+                    UnoGameId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UnoGameDeck", x => new { x.DeckId, x.UnoGameId });
+                    table.ForeignKey(
+                        name: "FK_UnoGameDeck_Card_DeckId",
+                        column: x => x.DeckId,
+                        principalTable: "Card",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_UnoGameDeck_UnoGame_UnoGameId",
+                        column: x => x.UnoGameId,
+                        principalTable: "UnoGame",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UnoGameDiscardPile",
+                columns: table => new
+                {
+                    DiscardPileId = table.Column<int>(type: "int", nullable: false),
+                    UnoGame1Id = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UnoGameDiscardPile", x => new { x.DiscardPileId, x.UnoGame1Id });
+                    table.ForeignKey(
+                        name: "FK_UnoGameDiscardPile_Card_DiscardPileId",
+                        column: x => x.DiscardPileId,
+                        principalTable: "Card",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_UnoGameDiscardPile_UnoGame_UnoGame1Id",
+                        column: x => x.UnoGame1Id,
+                        principalTable: "UnoGame",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.InsertData(
+                table: "DeveloperProfile",
+                columns: new[] { "DeveloperProfileId", "Discription", "Email", "Name", "PictureURL", "Skills" },
+                values: new object[] { 1, "Mijn naam is Ingvar Schoenmaker en ik ben 23 jaar oud.\r\n Ik volg de opleiding HBO-ICT en heb de richting ontwikkeling gekozen.\r\n Momenteel zit ik in mijn laatste jaar maar heb voor een reparatiesimester gekozen.\r\n", "ingvar.schoenmaker@windesheim.nl", "Ingvar Schoenmaker", "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.youtube.com%2Fuser%2Fingvarschoenmaker&psig=AOvVaw2ky-X0nW2dZBTyBvFecmhq&ust=1687858638390000&source=images&cd=vfe&ved=0CBEQjRxqFwoTCPDm5MTR4P8CFQAAAAAdAAAAABAE", "Ik heb verschillende skills zoals c#, js en Python" });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -196,6 +354,31 @@ namespace WebDevSem2ClientMVC.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Card_PlayerId",
+                table: "Card",
+                column: "PlayerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LobbyTable_GameId",
+                table: "LobbyTable",
+                column: "GameId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Player_GameId",
+                table: "Player",
+                column: "GameId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UnoGameDeck_UnoGameId",
+                table: "UnoGameDeck",
+                column: "UnoGameId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UnoGameDiscardPile_UnoGame1Id",
+                table: "UnoGameDiscardPile",
+                column: "UnoGame1Id");
         }
 
         /// <inheritdoc />
@@ -217,10 +400,34 @@ namespace WebDevSem2ClientMVC.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "ContactForm");
+
+            migrationBuilder.DropTable(
+                name: "DeveloperProfile");
+
+            migrationBuilder.DropTable(
+                name: "LobbyTable");
+
+            migrationBuilder.DropTable(
+                name: "UnoGameDeck");
+
+            migrationBuilder.DropTable(
+                name: "UnoGameDiscardPile");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "Card");
+
+            migrationBuilder.DropTable(
+                name: "Player");
+
+            migrationBuilder.DropTable(
+                name: "UnoGame");
         }
     }
 }

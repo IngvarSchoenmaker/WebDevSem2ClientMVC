@@ -8,6 +8,9 @@ using WebDevSem2ClientMVC.Hubs;
 using WebDevSem2ClientMVC.Interfaces;
 using WebDevSem2ClientMVC.Models;
 using System.Net.Http.Json;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System.Text.RegularExpressions;
+using Microsoft.AspNet.SignalR.Hubs;
 
 namespace WebDevSem2ClientMVC.Controllers
 {
@@ -27,7 +30,6 @@ namespace WebDevSem2ClientMVC.Controllers
             var availableTables = await GetAvailableTables();
             return View(availableTables);
         }
-        //[HttpPost]
         public async Task<IActionResult> JoinTable(int tableId)
         {
             // Voeg logica toe om de speler aan de tafel toe te voegen
@@ -35,12 +37,12 @@ namespace WebDevSem2ClientMVC.Controllers
 
             if (response.IsSuccessStatusCode)
             {
-                await _hubContext.Clients.All.SendAsync("PlayerJoinedTable", tableId);
-                await UpdateTableList(); // Update de lijst met tafels voor andere clients
-                var jsonContent = await response.Content.ReadAsStringAsync();
-                TempData["TableId"] = tableId;
-                TempData["PlayerId"] = int.TryParse(jsonContent, out int number);
-                return RedirectToAction("Index", "Game");
+                //await UpdateTableList(); // Update de lijst met tafels voor andere clients
+                var playerId = await response.Content.ReadAsStringAsync();
+
+                //Roep hier hub aan om de speler toe te voegen aan de groep
+
+                return RedirectToAction("Index", "Game", new{ TableId = tableId, PlayerId = playerId});
             }
 
             return BadRequest("Unable to join the table");
@@ -87,13 +89,14 @@ namespace WebDevSem2ClientMVC.Controllers
             var jsonContent = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
 
             HttpResponseMessage response = await _httpClientManager.PostAsync("createTable", jsonContent);
+            Console.WriteLine(response);
             string theId = await response.Content.ReadAsStringAsync();
-            model.TableId = Int32.Parse(theId);
             if (response.IsSuccessStatusCode)
             {
-                //await _hubContext.Clients.All.SendAsync("TableCreated", model);
-
-                return new RedirectResult(url: "/LobbyTable/Index", permanent: true, preserveMethod: true);
+                model.TableId = Int32.Parse(theId);
+                await _hubContext.Clients.All.SendAsync("TableCreated", model);
+                return await JoinTable(model.TableId);
+                //return new RedirectResult(url: "/GameController/Index", permanent: true, preserveMethod: true);
             }
             return BadRequest($"Invalid input or connection problem");
         }

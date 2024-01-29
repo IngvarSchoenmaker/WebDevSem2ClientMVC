@@ -14,6 +14,7 @@ using Serilog;
 using WebDevSem2ClientMVC.Hubs;
 using WebDevSem2ClientMVC.Interfaces;
 using WebDevSem2ClientMVC.Services;
+using WebDevSem2ClientMVC.Controllers;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("ApplicationDBContextConnection") ?? throw new InvalidOperationException("Connection string 'ApplicationDBContextConnection' not found.");
@@ -48,6 +49,8 @@ builder.Services.Configure<CookiePolicyOptions>(options =>
     options.CheckConsentNeeded = context => true;
 
     options.MinimumSameSitePolicy = SameSiteMode.None;
+
+    options.ConsentCookieValue = "true";
 });
 
 
@@ -55,6 +58,7 @@ builder.Services.AddSignalR();
 
 builder.Services.Configure<GoogleCaptchaConfig>(builder.Configuration.GetSection("GoogleReCaptcha"));
 builder.Services.AddTransient(typeof(GoogleCaptchaService));
+// scoped, add singleton
 builder.Services.AddHttpClient();
 builder.Services.AddHttpClient("localhost", c =>
 {
@@ -94,6 +98,8 @@ builder.Services.Configure<IdentityOptions>(options =>
 builder.Services.Configure<SecurityStampValidatorOptions>(o =>
                    o.ValidationInterval = TimeSpan.FromMinutes(1));
 builder.Services.AddScoped<IHttpClientManager, HttpClientManager>();
+//builder.Services.AddScoped<IGameController, GameController>();
+//builder.Services.AddSingleton<IGameController, GameController>();
 
 
 

@@ -12,8 +12,8 @@ using WebDevSem2ClientMVC.Areas.Identity.Data;
 namespace WebDevSem2ClientMVC.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20230629213656_unoupdate")]
-    partial class unoupdate
+    [Migration("20240117101401_connecttables")]
+    partial class connecttables
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,36 @@ namespace WebDevSem2ClientMVC.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("CardUnoGame", b =>
+                {
+                    b.Property<int>("DeckId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UnoGameUnoId")
+                        .HasColumnType("int");
+
+                    b.HasKey("DeckId", "UnoGameUnoId");
+
+                    b.HasIndex("UnoGameUnoId");
+
+                    b.ToTable("UnoGameDeck", (string)null);
+                });
+
+            modelBuilder.Entity("CardUnoGame1", b =>
+                {
+                    b.Property<int>("DiscardPileId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UnoGame1UnoId")
+                        .HasColumnType("int");
+
+                    b.HasKey("DiscardPileId", "UnoGame1UnoId");
+
+                    b.HasIndex("UnoGame1UnoId");
+
+                    b.ToTable("UnoGameDiscardPile", (string)null);
+                });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
@@ -186,9 +216,6 @@ namespace WebDevSem2ClientMVC.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
-                    b.Property<int?>("GameId")
-                        .HasColumnType("int");
-
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasMaxLength(255)
@@ -229,8 +256,6 @@ namespace WebDevSem2ClientMVC.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("GameId");
-
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
 
@@ -244,54 +269,29 @@ namespace WebDevSem2ClientMVC.Migrations
 
             modelBuilder.Entity("WebDevSem2ClientMVC.Models.Card", b =>
                 {
-                    b.Property<int>("CardId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CardId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CardColor")
+                    b.Property<int>("Color")
                         .HasColumnType("int");
 
-                    b.Property<string>("CardValue")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("CardId");
-
-                    b.ToTable("Card");
-                });
-
-            modelBuilder.Entity("WebDevSem2ClientMVC.Models.Cards", b =>
-                {
-                    b.Property<int>("CardsId")
-                        .ValueGeneratedOnAdd()
+                    b.Property<int>("Number")
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CardsId"));
-
-                    b.Property<int>("CardId")
+                    b.Property<int?>("PlayerId")
                         .HasColumnType("int");
 
-                    b.Property<int>("GameId")
+                    b.Property<int>("Type")
                         .HasColumnType("int");
 
-                    b.Property<string>("Id")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PlayerId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("CardsId");
-
-                    b.HasIndex("CardId");
-
-                    b.HasIndex("GameId");
+                    b.HasKey("Id");
 
                     b.HasIndex("PlayerId");
 
-                    b.ToTable("Cards");
+                    b.ToTable("Card");
                 });
 
             modelBuilder.Entity("WebDevSem2ClientMVC.Models.ContactForm", b =>
@@ -368,33 +368,94 @@ namespace WebDevSem2ClientMVC.Migrations
                         });
                 });
 
-            modelBuilder.Entity("WebDevSem2ClientMVC.Models.Game", b =>
+            modelBuilder.Entity("WebDevSem2ClientMVC.Models.LobbyTable", b =>
                 {
-                    b.Property<int>("GameId")
+                    b.Property<int>("TableId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("GameId"));
-
-                    b.Property<int?>("CurrentCardCardId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("GameName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<int>("GameStatus")
-                        .HasColumnType("int");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TableId"));
 
                     b.Property<int>("NumberOfPlayers")
                         .HasColumnType("int");
 
-                    b.HasKey("GameId");
+                    b.Property<string>("TableName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
-                    b.HasIndex("CurrentCardCardId");
+                    b.Property<int?>("UnoId")
+                        .HasColumnType("int");
 
-                    b.ToTable("Game");
+                    b.HasKey("TableId");
+
+                    b.HasIndex("UnoId");
+
+                    b.ToTable("LobbyTable");
+                });
+
+            modelBuilder.Entity("WebDevSem2ClientMVC.Models.Player", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("GameUnoId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GameUnoId");
+
+                    b.ToTable("Player");
+                });
+
+            modelBuilder.Entity("WebDevSem2ClientMVC.Models.UnoGame", b =>
+                {
+                    b.Property<int>("UnoId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UnoId"));
+
+                    b.Property<int>("GameStatus")
+                        .HasColumnType("int");
+
+                    b.HasKey("UnoId");
+
+                    b.ToTable("UnoGame");
+                });
+
+            modelBuilder.Entity("CardUnoGame", b =>
+                {
+                    b.HasOne("WebDevSem2ClientMVC.Models.Card", null)
+                        .WithMany()
+                        .HasForeignKey("DeckId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("WebDevSem2ClientMVC.Models.UnoGame", null)
+                        .WithMany()
+                        .HasForeignKey("UnoGameUnoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("CardUnoGame1", b =>
+                {
+                    b.HasOne("WebDevSem2ClientMVC.Models.Card", null)
+                        .WithMany()
+                        .HasForeignKey("DiscardPileId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("WebDevSem2ClientMVC.Models.UnoGame", null)
+                        .WithMany()
+                        .HasForeignKey("UnoGame1UnoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -448,53 +509,38 @@ namespace WebDevSem2ClientMVC.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("WebDevSem2ClientMVC.Areas.Identity.Data.ApplicationUser", b =>
+            modelBuilder.Entity("WebDevSem2ClientMVC.Models.Card", b =>
                 {
-                    b.HasOne("WebDevSem2ClientMVC.Models.Game", "Game")
-                        .WithMany("Players")
-                        .HasForeignKey("GameId");
-
-                    b.Navigation("Game");
-                });
-
-            modelBuilder.Entity("WebDevSem2ClientMVC.Models.Cards", b =>
-                {
-                    b.HasOne("WebDevSem2ClientMVC.Models.Card", "Card")
-                        .WithMany()
-                        .HasForeignKey("CardId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("WebDevSem2ClientMVC.Models.Game", "Game")
-                        .WithMany("Cards")
-                        .HasForeignKey("GameId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("WebDevSem2ClientMVC.Areas.Identity.Data.ApplicationUser", "Player")
-                        .WithMany()
+                    b.HasOne("WebDevSem2ClientMVC.Models.Player", null)
+                        .WithMany("HandCards")
                         .HasForeignKey("PlayerId");
+                });
 
-                    b.Navigation("Card");
+            modelBuilder.Entity("WebDevSem2ClientMVC.Models.LobbyTable", b =>
+                {
+                    b.HasOne("WebDevSem2ClientMVC.Models.UnoGame", "Game")
+                        .WithMany()
+                        .HasForeignKey("UnoId");
 
                     b.Navigation("Game");
-
-                    b.Navigation("Player");
                 });
 
-            modelBuilder.Entity("WebDevSem2ClientMVC.Models.Game", b =>
+            modelBuilder.Entity("WebDevSem2ClientMVC.Models.Player", b =>
                 {
-                    b.HasOne("WebDevSem2ClientMVC.Models.Card", "CurrentCard")
-                        .WithMany()
-                        .HasForeignKey("CurrentCardCardId");
+                    b.HasOne("WebDevSem2ClientMVC.Models.UnoGame", "Game")
+                        .WithMany("Players")
+                        .HasForeignKey("GameUnoId");
 
-                    b.Navigation("CurrentCard");
+                    b.Navigation("Game");
                 });
 
-            modelBuilder.Entity("WebDevSem2ClientMVC.Models.Game", b =>
+            modelBuilder.Entity("WebDevSem2ClientMVC.Models.Player", b =>
                 {
-                    b.Navigation("Cards");
+                    b.Navigation("HandCards");
+                });
 
+            modelBuilder.Entity("WebDevSem2ClientMVC.Models.UnoGame", b =>
+                {
                     b.Navigation("Players");
                 });
 #pragma warning restore 612, 618

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WebDevSem2ClientMVC.Models
 {
@@ -10,17 +11,20 @@ namespace WebDevSem2ClientMVC.Models
     }
     public class UnoGame
     {
-        public int Id { get; set; }
+        [Key]
+        public int UnoId { get; set; }
         public GameStatus GameStatus { get; set; }
-        public List<Player> Players { get; set; } = new List<Player>();
-        [NotMapped]
-        public Player? CurrentPlayer { get; set; }
+        public List<Player> Players { get; set; }
+        public List<Card> Deck { get; set; }
+        public List<Card> DiscardPile { get; set; }
+        [ForeignKey("PlayerId")]
+        public Player? CurrentPlayer;
 
-        public List<Card>? Deck { get; set; }
-        public List<Card>? DiscardPile { get; set; }
-
+        //niet database
+        public Player? You;
         public UnoGame() 
         {
+            Players = new List<Player>();
             GameStatus = GameStatus.WaitingForPlayers;
             Deck = InitializeDeck();
             ShuffleDeck();
@@ -28,6 +32,7 @@ namespace WebDevSem2ClientMVC.Models
         }
         public UnoGame(Player players)
         {
+            Players = new List<Player>();
             GameStatus = GameStatus.WaitingForPlayers;
             JoinGame(players);
             Deck = InitializeDeck();
@@ -47,6 +52,7 @@ namespace WebDevSem2ClientMVC.Models
         }
         public void JoinGame(Player player)
         {
+            player.HandCards = GetStartingHand();
             Players.Add(player);
         }
 

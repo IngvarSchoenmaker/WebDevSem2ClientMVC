@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WebDevSem2ClientMVC.Models
 {
@@ -15,6 +16,7 @@ namespace WebDevSem2ClientMVC.Models
         [Required(ErrorMessage = "Aantal spelers is verplicht")]
         [Range(2, 4, ErrorMessage = "Aantal spelers moet tussen 2 en 4 liggen")]
         public int NumberOfPlayers { get; set; }
+        [ForeignKey("UnoId")]
         public UnoGame? Game { get; set; }
     }
 
